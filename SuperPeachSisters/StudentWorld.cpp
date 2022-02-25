@@ -138,6 +138,8 @@ void StudentWorld::cleanUp()
 StudentWorld::~StudentWorld(){
     cleanUp();
 }
+ 
+
 
 bool StudentWorld::checkPosBelow(int a, int b){
     std::vector<Actor*>::iterator it;
