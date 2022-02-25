@@ -9,5 +9,5 @@ taken hostage by the evil greenhouse gas producer named Yerac Grebnehcan (who is
 known for producing huge amounts of methane), and Peach must face a number of
 increasingly difficult levels to rescue him. 
 
-Objectives:
+Topics:
 Polymorphism, Inheritance, STL
