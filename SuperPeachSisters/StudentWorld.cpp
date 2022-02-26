@@ -17,7 +17,20 @@ StudentWorld::StudentWorld(string assetPath): GameWorld(assetPath)
     actors.clear();
 }
 
+bool StudentWorld::addFlower(int x, int y){
 
+    actors.push_back(new Flower(this, x, y));
+        return true;
+}
+
+bool StudentWorld::addStar(int x, int y){
+    actors.push_back(new Star(this, x, y));
+        return true;
+}
+bool StudentWorld::addMushroom(int x, int y){
+    actors.push_back(new Mushroom(this, x, y+8));
+        return true;
+}
    
 bool StudentWorld::overlap(int x1, int y1, int x2, int y2){
     
@@ -53,13 +66,18 @@ bool StudentWorld::overlapThenBonk(Actor* a1){
 
 }
 
-bool StudentWorld::blockThenBonk(int x, int &y, Actor* a1) {
+bool StudentWorld::blockThenBonk(int x, int y, Actor* a1) {
+
+    y++;
     for (auto a : actors)
-        if (a != a1)
-            if (a->checkifAlive() && !checkPos(x, y, a1)){
-                a->bonk();
-                return true;
-            }
+            if (a != a1)
+                if (a->checkifAlive() && a->solidObject())
+                    if (x + SPRITE_WIDTH > a->getX() && x < a->getX() + SPRITE_WIDTH)
+                        if (y + SPRITE_HEIGHT > a->getY() && y < a->getY() + SPRITE_HEIGHT){
+                                a->bonk();
+                            return true;
+                            
+                        }
     return false;
 
 }
@@ -87,10 +105,16 @@ int StudentWorld::init()
                     m_peach = new Peach(this, x, y);
                     break;
                 case Level::star_goodie_block:
+                    actors.push_back (new Block(this, x, y, "star"));
+                    break;
                 case Level::mushroom_goodie_block:
+                    actors.push_back (new Block(this, x, y,"mushroom"));
+                    break;
                 case Level::flower_goodie_block:
+                    actors.push_back (new Block(this, x, y,"flower"));
+                    break;
                 case Level::block:
-                    actors.push_back (new Block(this, x, y));
+                    actors.push_back (new Block(this, x, y,"none"));
                     break;
                 case Level::pipe:
                     actors.push_back (new Pipe(this, x, y));
@@ -110,7 +134,7 @@ int StudentWorld::init()
                     m_flag = new Flag(this, x, y);
                     break;
                 case Level::mario:
-                    m_mario = new Mario(this, x, y);
+                  //  m_mario = new Mario(this, x, y);
                     marioisHere = true;
                     break;
             }
@@ -123,10 +147,13 @@ int StudentWorld::init()
 int StudentWorld::move()
 {
     m_peach->doSomething();
-    for(Actor *a: actors)
-        a->doSomething();
-    
-    
+    m_flag->doSomething();
+    for (auto it = actors.begin(); it != actors.end(); it++) {
+        if (!(*it)->checkifAlive()) {
+            (*it)->doSomething();
+        }
+    }
+
     //  if peach has died
     if(m_peach->checkifAlive() == false){
         playSound(SOUND_PLAYER_DIE);

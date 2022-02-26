@@ -18,7 +18,7 @@ void Mushroom::doSomething(){
         //  It will do nothing else and immediately return
         return;
     }
-    
+   // isVisible() = true;
     /*
      Mushroom object must determine if there is an object just beneath
      it that would block it from falling two pixels downward. If there is no such
@@ -36,7 +36,6 @@ void Mushroom::doSomething(){
      The Mushroom object will then determine what direction it is facing (0 or 180
      degrees) and try to move in that direction by 2 pixels:
      */
-    
     
     int d = getDirection();
     setDirection(d);
@@ -59,21 +58,33 @@ void Mushroom::doSomething(){
    }
 
 void Block::bonk(){
-    if(checkifAlive()){
+    if(typeG == "none"){
         getWorld()->playSound(SOUND_PLAYER_BONK);
         return;
     }
 
-   // getWorld()->playSound(SOUND_POWERUP_APPEARS);
+   getWorld()->playSound(SOUND_POWERUP_APPEARS);
     
     /*  Introduce a goodie object of the appropriate type (Flower, Star or
      Mushroom) exactly 8 pixels above the block that was bonked (the
      same x coordinate as the block, but y+8 from the block)
      */
-    // ----------
+   
+    if(typeG == "flower") {
+        getWorld()->addFlower(getX(), getY()+8);
+        //  It has been bonked!!!
+        typeG = "none";}
+    if(typeG == "star") {
+        //  It has been bonked!!!
+        typeG = "none";
+        getWorld()->addStar(getX(), getY()+8);}
+    if(typeG == "mushroom"){
+        getWorld()->addMushroom(getX(), getY());
+        //  It has been bonked!!!
+        typeG = "none";
+    }
     
-    //  It has been bonked!!!
-    die();
+
     
 }
 
@@ -204,6 +215,8 @@ void Peach::doSomething(){
              StudentWorld. The fireball must have its direction set to the
              same direction that Peach was facing when she fired.*/
 
+            
+            
             if(getWorld()->checkPos(getX(),getY()-4, this)) //check if blocked
                 moveTo(getX(), getY()-4);
             break;

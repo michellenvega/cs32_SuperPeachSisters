@@ -21,6 +21,7 @@ public:
 private:
     bool isAlive;
     StudentWorld* m_world;
+  
 };
 
 
@@ -28,7 +29,7 @@ class Overlapable : public Actor {
  public:
     Overlapable(StudentWorld* world, int imageID, int x_level, int y_level, int depth, int startDirection = 0) :
             Actor(world, imageID, x_level, y_level, startDirection, depth) {};
-
+    virtual void doSomething(){return;}
     virtual bool solidObject() {return false;}
     virtual void bonk() {return;}
  };
@@ -55,8 +56,9 @@ class Mario: public Overlapable{
  public:
      Goodie(StudentWorld* world, int imageID, int x_level, int y_level) :
         Overlapable(world, imageID, x_level, y_level, 1) {};
+     virtual void doSomething(){return;}
  private:
-     virtual void giveGoodie() = 0;
+     virtual void giveGoodie(int imageID) {return;}
  };
 
  class Star : public Goodie {
@@ -64,8 +66,7 @@ class Mario: public Overlapable{
     Star(StudentWorld* world, int x_level, int y_level) :
          Goodie(world, IID_STAR, x_level, y_level) {};
      virtual void doSomething(){return;}
- private:
-     virtual void giveGoodie(){return;}
+
  };
 
  class Flower : public Goodie {
@@ -73,8 +74,7 @@ class Mario: public Overlapable{
  Flower(StudentWorld* world, int x_level, int y_level) :
          Goodie(world, IID_FLOWER, x_level, y_level) {};
      virtual void doSomething(){return;}
- private:
-     virtual void giveGoodie(){return;}
+
  };
  
  class Mushroom : public Goodie {
@@ -82,8 +82,7 @@ class Mario: public Overlapable{
     Mushroom(StudentWorld* world, int x_level, int y_level) :
          Goodie(world, IID_MUSHROOM, x_level, y_level) {};
      virtual void doSomething();
- private:
-     virtual void giveGoodie(){return;}
+
  };
  
 
@@ -159,11 +158,13 @@ public:
 // block
 class Block: public Actor{
     public:
-    Block(StudentWorld* world, int x_level, int y_level): Actor(world, IID_BLOCK, x_level, y_level, 0 , 2){};
+    Block(StudentWorld* world, int x_level, int y_level, string g = "star"): Actor(world, IID_BLOCK, x_level, y_level, 0 , 2),
+                typeG(g){};
     virtual void doSomething(){ return; }
     virtual void bonk();
     virtual bool solidObject(){return true;}
-    
+private:
+    string typeG;
 };
 
 // pipe
