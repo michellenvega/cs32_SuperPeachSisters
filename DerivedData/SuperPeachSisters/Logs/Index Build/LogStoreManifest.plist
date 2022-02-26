@@ -1978,6 +1978,40 @@
 			<key>uniqueIdentifier</key>
 			<string>8E33D4D7-E179-4755-9062-8D26F0744F83</string>
 		</dict>
+		<key>905B0288-7501-4EDB-8E16-1319CF72D81F</key>
+		<dict>
+			<key>className</key>
+			<string>IDEActivityLogSection</string>
+			<key>documentTypeString</key>
+			<string>&lt;nil&gt;</string>
+			<key>domainType</key>
+			<string>Xcode.IDEActivityLogDomainType.IndexBuildLog</string>
+			<key>fileName</key>
+			<string>905B0288-7501-4EDB-8E16-1319CF72D81F.xcactivitylog</string>
+			<key>hasPrimaryLog</key>
+			<true/>
+			<key>primaryObservable</key>
+			<dict>
+				<key>highLevelStatus</key>
+				<string>S</string>
+			</dict>
+			<key>schemeIdentifier-containerName</key>
+			<string>Index Build</string>
+			<key>schemeIdentifier-schemeName</key>
+			<string>Index Build</string>
+			<key>schemeIdentifier-sharedScheme</key>
+			<integer>0</integer>
+			<key>signature</key>
+			<string>SuperPeachSisters Build Preparation</string>
+			<key>timeStartedRecording</key>
+			<real>667538801.08223796</real>
+			<key>timeStoppedRecording</key>
+			<real>667538801.09699202</real>
+			<key>title</key>
+			<string>SuperPeachSisters Build Preparation</string>
+			<key>uniqueIdentifier</key>
+			<string>905B0288-7501-4EDB-8E16-1319CF72D81F</string>
+		</dict>
 		<key>90812A63-9793-426E-84E0-28C10D17DFA3</key>
 		<dict>
 			<key>className</key>
