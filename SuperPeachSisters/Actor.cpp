@@ -32,8 +32,6 @@ void Mushroom::doSomething(){
             y2--;
                     moveTo(x2,y2);
     
-    
-    
     /*
      The Mushroom object will then determine what direction it is facing (0 or 180
      degrees) and try to move in that direction by 2 pixels:
@@ -43,29 +41,20 @@ void Mushroom::doSomething(){
     int d = getDirection();
     setDirection(d);
     int testX = getX(); int testY = getY();
-    
-    if(!getWorld()->checkPos(testX, testY, this)){
+    // The Mushroom will calculate a target x,y position first (2 pixels greater or  less than its current x position)
+    if(!getWorld()->checkPos(testX+1, testY, this) && !getWorld()->checkPos(testX+2, testY, this) ){
         //  Check to see if there is an object that would block movement to this destination position
         //  The Mushroom will reverse its direction (from 0 to 180, or vice versa)
         if( d == 180 ) d = 0;
         else d = 180;
         setDirection(d);
-        
+        return; //  The Mushroom will do nothing else and immediately return
     }
-    moveTo(getX()+2, getY());
     
-    
-    /*
-     a. The Mushroom will calculate a target x,y position first (2 pixels greater or
-     less than its current x position)
-     b. The Mushroom will check to see if there is an object that would block
-     movement to this destination position. If so:
-     i. The Mushroom will reverse its direction (from 0 to 180, or vice
-     versa)
-     ii. The Mushroom will do nothing else and immediately return
-     c. Otherwise, the Mushroom will update its location 2 pixels leftward or
-     rightward depending on the direction it’s facing.
-     */
+    // Otherwise, the Mushroom will update its location 2 pixels leftward or rightward depending on the direction it’s facing.
+    if(d==0)    moveTo(getX()+2, getY());
+    else        moveTo(getX()-2, getY());
+
     
    }
 
