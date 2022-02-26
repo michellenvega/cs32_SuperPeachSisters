@@ -4,6 +4,7 @@
 // Students:  Add code to this file, Actor.h, StudentWorld.h, and StudentWorld.cpp
 
 void Mushroom::doSomething(){
+    if(!isVisible()) return;
     if(getWorld()->overlapsPeach(this)){ // Mushroom object must see if it currently overlaps with Peach.
         //   It will increase the player’s score by 75 points
         getWorld()->increaseScore(75);
@@ -13,49 +14,230 @@ void Mushroom::doSomething(){
         getWorld()->setPeachHP(2);
         //  It will immediately set its state to not-alive
         die();
+        setVisible(false);
         //  It will play a sound of SOUND_PLAYER_POWERUP using GameWorld’s playSound() method
         getWorld()->playSound(SOUND_PLAYER_POWERUP);
         //  It will do nothing else and immediately return
         return;
     }
-   // isVisible() = true;
     /*
      Mushroom object must determine if there is an object just beneath
      it that would block it from falling two pixels downward. If there is no such
      blocking object beneath the Mushroom, it will:
      */
         //  Use the moveTo() method to move downward 2 pixels
+    bool canMove = false;
     int x2 = getX(); int y2 = getY();
-    if(getWorld()->checkPos(x2,y2,this))
-        y2--;
-        if(getWorld()->checkPos(x2,y2,this))
+  
+        if(getWorld()->checkPos(x2,y2,this)) {
             y2--;
-                    moveTo(x2,y2);
+            if(getWorld()->checkPos(x2,y2,this)) {
+                y2--;
+           
+            } else canMove = true;
+        } else
+            canMove = true;
+    moveTo(x2,y2);
     
+    while(getWorld()->checkPos(x2,y2,this)){
+        y2--;
+        }
+    moveTo(x2,y2);
     /*
      The Mushroom object will then determine what direction it is facing (0 or 180
      degrees) and try to move in that direction by 2 pixels:
      */
+    if(getWorld()->getPeachTargetingInfo(this) > 0)
+        setDirection(0);
+    else if(getWorld()->getPeachTargetingInfo(this) < 0) setDirection(180);
     
     int d = getDirection();
-    setDirection(d);
     int testX = getX(); int testY = getY();
     // The Mushroom will calculate a target x,y position first (2 pixels greater or  less than its current x position)
-    if(!getWorld()->checkPos(testX+1, testY, this) && !getWorld()->checkPos(testX+2, testY, this) ){
-        //  Check to see if there is an object that would block movement to this destination position
-        //  The Mushroom will reverse its direction (from 0 to 180, or vice versa)
-        if( d == 180 ) d = 0;
-        else d = 180;
-        setDirection(d);
-        return; //  The Mushroom will do nothing else and immediately return
-    }
+    //  Check to see if there is an object that would block movement to this destination position
+    //  The Mushroom will reverse its direction (from 0 to 180, or vice versa)
     
-    // Otherwise, the Mushroom will update its location 2 pixels leftward or rightward depending on the direction it’s facing.
-    if(d==0)    moveTo(getX()+2, getY());
-    else        moveTo(getX()-2, getY());
+    
+    if(d == 180) {
+      //&& getWorld()->blockThenBonked(testX-2, testY-1, this)
+        if(getWorld()->blockThenBonk(testX-2, testY, this) && getWorld()->blockThenBonk(testX-1, testY, this)){
+            d = 0;
+        setDirection(d);
+        return;
+        }
+    }
+    else{
+        if(getWorld()->blockThenBonk(testX+2, testY, this) && getWorld()->blockThenBonk(testX+1, testY, this)){
+        d = 180;
+        setDirection(d);
+        return;
+        }
+    }
 
     
+    // Otherwise, the Mushroom will update its location 2 pixels leftward or rightward depending on the direction it’s facing.
+    if(d==0 && canMove)    moveTo(getX()+2, getY());
+    else if(canMove)       moveTo(getX()-2, getY());
+    
    }
+
+
+void Flower::doSomething(){
+    if(!isVisible()) return;
+    if(getWorld()->overlapsPeach(this)){ // Flower object must see if it currently overlaps with Peach.
+        //   It will increase the player’s score by 50 points
+        getWorld()->increaseScore(50);
+        //   It will inform the Peach object that it now has the Shoot Power
+        getWorld()->grantShootPower();
+        //  It will set Peach’s hit points to 2
+        getWorld()->setPeachHP(2);
+        //  It will immediately set its state to not-alive
+        die();
+        setVisible(false);
+        //  It will play a sound of SOUND_PLAYER_POWERUP using GameWorld’s playSound() method
+        getWorld()->playSound(SOUND_PLAYER_POWERUP);
+        //  It will do nothing else and immediately return
+        return;
+    }
+    /*
+     Flower object must determine if there is an object just beneath
+     it that would block it from falling two pixels downward. If there is no such
+     blocking object beneath the Flower, it will:
+     */
+        //  Use the moveTo() method to move downward 2 pixels
+   
+    int x2 = getX(); int y2 = getY();
+  
+        if(getWorld()->checkPos(x2,y2,this)) {
+            
+            y2--;
+            if(getWorld()->checkPos(x2,y2,this)) {
+                y2--;
+           
+            }
+        }
+    moveTo(x2,y2);
+    
+    while(getWorld()->checkPos(x2,y2,this)){
+        y2--;
+        }
+    moveTo(x2,y2);
+    /*
+     The Flower object will then determine what direction it is facing (0 or 180
+     degrees) and try to move in that direction by 2 pixels:
+     */
+    
+   
+    int testX = getX(); int testY = getY();
+    
+    if(getWorld()->getPeachTargetingInfo(this) > 0)
+        setDirection(0);
+    else if(getWorld()->getPeachTargetingInfo(this) < 0) setDirection(180);
+    
+    // The Flower will calculate a target x,y position first (2 pixels greater or  less than its current x position)
+    //  Check to see if there is an object that would block movement to this destination position
+    //  The Flower will reverse its direction (from 0 to 180, or vice versa)
+    int d = getDirection();
+    if(d == 180) {
+        if(getWorld()->blockThenBonk(testX-2, testY, this) && getWorld()->blockThenBonk(testX-1, testY, this)){
+            d = 0;
+        setDirection(d);
+        return;
+        }
+    }
+    else{
+        if(getWorld()->blockThenBonk(testX+2, testY, this) && getWorld()->blockThenBonk(testX+1, testY, this)){
+        d = 180;
+        setDirection(d);
+        return;
+        }
+    }
+
+    
+    // Otherwise, the Flower will update its location 2 pixels leftward or rightward depending on the direction it’s facing.
+    if(d==0 )    moveTo(getX()+2, getY());
+    else       moveTo(getX()-2, getY());
+    
+}
+
+void Star::doSomething(){
+    if(!isVisible()) return;
+    if(getWorld()->overlapsPeach(this)){ // Star object must see if it currently overlaps with Peach.
+        //   It will increase the player’s score by 100 points
+        getWorld()->increaseScore(100);
+        //  It will inform the Peach object that it now has the Star Power for 150 game ticks
+        getWorld()->grantInvincibility(150);
+        //  It will set Peach’s hit points to 2
+        getWorld()->setPeachHP(2);
+        //  It will immediately set its state to not-alive
+        die();
+        setVisible(false);
+        //  It will play a sound of SOUND_PLAYER_POWERUP using GameWorld’s playSound() method
+        getWorld()->playSound(SOUND_PLAYER_POWERUP);
+        //  It will do nothing else and immediately return
+        return;
+    }
+    /*
+     Star object must determine if there is an object just beneath
+     it that would block it from falling two pixels downward. If there is no such
+     blocking object beneath the Star, it will:
+     */
+        //  Use the moveTo() method to move downward 2 pixels
+   
+    int x2 = getX(); int y2 = getY();
+  
+        if(getWorld()->checkPos(x2,y2,this)) {
+            
+            y2--;
+            if(getWorld()->checkPos(x2,y2,this)) {
+                y2--;
+           
+            }
+        }
+    moveTo(x2,y2);
+    
+    while(getWorld()->checkPos(x2,y2,this)){
+        y2--;
+        }
+    moveTo(x2,y2);
+    /*
+     The Star object will then determine what direction it is facing (0 or 180
+     degrees) and try to move in that direction by 2 pixels:
+     */
+    
+   
+    int testX = getX(); int testY = getY();
+    
+    if(getWorld()->getPeachTargetingInfo(this) > 0)
+        setDirection(0);
+    else if(getWorld()->getPeachTargetingInfo(this) < 0) setDirection(180);
+    
+    // The Star will calculate a target x,y position first (2 pixels greater or  less than its current x position)
+    //  Check to see if there is an object that would block movement to this destination position
+    //  The Star will reverse its direction (from 0 to 180, or vice versa)
+    int d = getDirection();
+    if(d == 180) {
+        if(getWorld()->blockThenBonk(testX-2, testY, this) && getWorld()->blockThenBonk(testX-1, testY, this)){
+            d = 0;
+        setDirection(d);
+        return;
+        }
+    }
+    else{
+        if(getWorld()->blockThenBonk(testX+2, testY, this) && getWorld()->blockThenBonk(testX+1, testY, this)){
+        d = 180;
+        setDirection(d);
+        return;
+        }
+    }
+
+    
+    // Otherwise, the Star will update its location 2 pixels leftward or rightward depending on the direction it’s facing.
+    if(d==0 )    moveTo(getX()+2, getY());
+    else       moveTo(getX()-2, getY());
+    }
+
+
 
 void Block::bonk(){
     if(typeG == "none"){
@@ -63,7 +245,7 @@ void Block::bonk(){
         return;
     }
 
-   getWorld()->playSound(SOUND_POWERUP_APPEARS);
+ //  getWorld()->playSound(SOUND_POWERUP_APPEARS);
     
     /*  Introduce a goodie object of the appropriate type (Flower, Star or
      Mushroom) exactly 8 pixels above the block that was bonked (the
@@ -71,13 +253,13 @@ void Block::bonk(){
      */
    
     if(typeG == "flower") {
-        getWorld()->addFlower(getX(), getY()+8);
+        getWorld()->addFlower(getX(), getY());
         //  It has been bonked!!!
         typeG = "none";}
     if(typeG == "star") {
         //  It has been bonked!!!
         typeG = "none";
-        getWorld()->addStar(getX(), getY()+8);}
+        getWorld()->addStar(getX(), getY());}
     if(typeG == "mushroom"){
         getWorld()->addMushroom(getX(), getY());
         //  It has been bonked!!!

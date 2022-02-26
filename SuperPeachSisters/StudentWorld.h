@@ -65,16 +65,16 @@ public:
     // return false; otherwise, set xDeltaFromActor to the difference
     // between Peach's and a's x coordinates (positive means Peach is to
     // the right of a) and return true.
-    bool getPeachTargetingInfo(Actor* a, int yDeltaLimit, int& xDeltaFromActor) const;
+    int getPeachTargetingInfo(Actor* a) const;
     
     // Set Peach's hit points to hp.
     void setPeachHP(int hp) const{return;}
     
     // Grant Peach invincibility for this number of ticks.
-    void grantInvincibility(int ticks) const;
+    void grantInvincibility(int ticks) const{return;}
     
     // Grant Peach Shoot Power.
-    void grantShootPower() const;
+    void grantShootPower() const{return;}
     
     // Grant Peach Jump Power.
     void grantJumpPower() const{return;}
@@ -84,6 +84,9 @@ public:
     
     // if blocking position, bonk the second actor
     bool blockThenBonk(int x, int y, Actor* a1) ;
+    
+    // if blocking position, set true
+    bool isBlocked(int x, int y, Actor* a1) ;
     
     //  has started game
     bool startedGame = false;

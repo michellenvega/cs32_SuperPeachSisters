@@ -18,20 +18,41 @@ StudentWorld::StudentWorld(string assetPath): GameWorld(assetPath)
 }
 
 bool StudentWorld::addFlower(int x, int y){
-
-    actors.push_back(new Flower(this, x, y));
-        return true;
+    for(auto a : actors){
+        if (a->getX() == x && a->getY() == y && !a->solidObject()){
+            a->setVisible(true);
+            a->moveTo(x, y+8);
+            return true;
+        }}
+    return false;
 }
 
 bool StudentWorld::addStar(int x, int y){
-    actors.push_back(new Star(this, x, y));
-        return true;
+    for(auto a : actors){
+        if (a->getX() == x && a->getY() == y && !a->solidObject()){
+            a->setVisible(true);
+            a->moveTo(x, y+8);
+            return true;
+        }}
+    return false;
 }
 bool StudentWorld::addMushroom(int x, int y){
-    actors.push_back(new Mushroom(this, x, y+8));
-        return true;
+    for(auto a : actors){
+        if (a->getX() == x && a->getY() == y && !a->solidObject()){
+            a->setVisible(true);
+            a->moveTo(x, y+8);
+            return true;
+        }}
+    return false;
 }
    
+int StudentWorld::getPeachTargetingInfo(Actor* a) const{
+    int y1 = a->getY();
+    int y2 = m_peach->getY();
+    if (y1 + SPRITE_HEIGHT > y2 && y1 < y2 + SPRITE_HEIGHT)
+        return m_peach->getX() - a->getX();
+    return 0;
+}
 bool StudentWorld::overlap(int x1, int y1, int x2, int y2){
     
     if (x1 + SPRITE_WIDTH > x2 && x1 < x2 + SPRITE_WIDTH)
@@ -65,7 +86,14 @@ bool StudentWorld::overlapThenBonk(Actor* a1){
     return false;
 
 }
+bool StudentWorld::isBlocked(int x, int y, Actor* a1) {
 
+   bool doesit = overlap(x, y, a1->getX(), a1->getX());
+    for (auto a : actors)
+        if((a->getX() == x && a->getY() == y && a->solidObject()) || doesit)
+            return true;
+    return false;
+}
 bool StudentWorld::blockThenBonk(int x, int y, Actor* a1) {
 
     y++;
@@ -104,15 +132,24 @@ int StudentWorld::init()
                 case Level::peach:
                     m_peach = new Peach(this, x, y);
                     break;
-                case Level::star_goodie_block:
-                    actors.push_back (new Block(this, x, y, "star"));
-                    break;
-                case Level::mushroom_goodie_block:
+                case Level::star_goodie_block:{
+                    actors.push_back (new Block(this, x, y,"star"));
+                    Star* s = new Star(this,x,y);
+                    s->setVisible(false);
+                    actors.push_back (s);
+                    break;}
+                case Level::mushroom_goodie_block:{
                     actors.push_back (new Block(this, x, y,"mushroom"));
-                    break;
-                case Level::flower_goodie_block:
+                    Mushroom* m = new Mushroom(this,x,y);
+                    m->setVisible(false);
+                    actors.push_back (m);
+                    break;}
+                case Level::flower_goodie_block:{
                     actors.push_back (new Block(this, x, y,"flower"));
-                    break;
+                    Flower* f = new Flower(this,x,y);
+                    f->setVisible(false);
+                    actors.push_back (f);
+                    break;}
                 case Level::block:
                     actors.push_back (new Block(this, x, y,"none"));
                     break;
@@ -149,7 +186,7 @@ int StudentWorld::move()
     m_peach->doSomething();
     m_flag->doSomething();
     for (auto it = actors.begin(); it != actors.end(); it++) {
-        if (!(*it)->checkifAlive()) {
+        if ((*it)->checkifAlive()) {
             (*it)->doSomething();
         }
     }
@@ -190,10 +227,10 @@ int StudentWorld::move()
     stage_complete = false;
     
     // delete all dead actors
-    for(Actor *a: actors)
+   /* for(Actor *a: actors)
         if(!a->checkifAlive())
             delete a;
-    
+    */
     // update score status
     
     

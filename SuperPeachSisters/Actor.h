@@ -57,15 +57,18 @@ class Mario: public Overlapable{
      Goodie(StudentWorld* world, int imageID, int x_level, int y_level) :
         Overlapable(world, imageID, x_level, y_level, 1) {};
      virtual void doSomething(){return;}
+ protected:
+     bool reachedOSTACLE = false;
  private:
-     virtual void giveGoodie(int imageID) {return;}
+     //virtual void giveGoodie() = 0 ;
  };
 
  class Star : public Goodie {
  public:
     Star(StudentWorld* world, int x_level, int y_level) :
          Goodie(world, IID_STAR, x_level, y_level) {};
-     virtual void doSomething(){return;}
+     virtual void doSomething();
+ private:
 
  };
 
@@ -73,8 +76,9 @@ class Mario: public Overlapable{
  public:
  Flower(StudentWorld* world, int x_level, int y_level) :
          Goodie(world, IID_FLOWER, x_level, y_level) {};
-     virtual void doSomething(){return;}
-
+     virtual void doSomething();
+ private:
+    // virtual void giveGoodie();
  };
  
  class Mushroom : public Goodie {
@@ -82,7 +86,8 @@ class Mario: public Overlapable{
     Mushroom(StudentWorld* world, int x_level, int y_level) :
          Goodie(world, IID_MUSHROOM, x_level, y_level) {};
      virtual void doSomething();
-
+ private:
+    // virtual void giveGoodie();
  };
  
 
