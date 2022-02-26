@@ -23,9 +23,9 @@ void Block::bonk(){
 }
 
 void Peach::doSomething(){
-    if(!isAlive) return;
+    if(!checkifAlive()) return;
     
-   if(p_star == true)   // if has star power
+  /* if(p_star == true)   // if has star power
        star_ticks--;    // decrement the number of remaining game ticks before she loses this invincibility power
     if(star_ticks == 0) // when tick reaches 0
         p_star = false;   // set star power as off
@@ -33,7 +33,6 @@ void Peach::doSomething(){
     
     
     if((p_jump || p_shoot) && !p_star && getWorld()->overlapWithEnemy(this)){ // if have jump/shoot power and overlap with enemy
-        giveInvincPower();  // give temporary invincibility
         p_jump = false; p_shoot = false;}
     
     
@@ -43,7 +42,7 @@ void Peach::doSomething(){
         p_invincible = false;   // set temp invinc to false (need bool then)
         
     
-    
+    */
     
     // check if in recharge mode
         // time_to_recharge_before_next_fire ticks is greater than zero
@@ -54,7 +53,7 @@ void Peach::doSomething(){
     
     
     
-        if(getWorld()->overlapThenBonk(this))  //  if overlap with another object, must bonk another object
+    if(getWorld()->overlapThenBonk(this))  //  if overlap with another object, must bonk another object
             getWorld()->playSound(SOUND_PLAYER_BONK); //    play sound
     
     
@@ -94,21 +93,6 @@ void Peach::doSomething(){
         
     }
   
-    //  space bar:
-    /* i. If Peach doesn’t have Shoot Power, then do nothing
-     ii. Otherwise, if the time_to_recharge_before_next_fire is greater
-     than zero, then do nothing.
-     iii. Otherwise:
-     1. Play the sound SOUND_PLAYER_FIRE using the
-     playSound() method in the GameWorld class.
-     2. Set time_to_recharge_before_next_fire to 8, meaning that
-     Peach may not fire again for another 8 game ticks
-     3. Determine the x,y position directly in front of Peach that is
-     4 pixels away in the direction she’s facing.
-     4. Introduce a new fireball object at this location into your
-     StudentWorld. The fireball must have its direction set to the
-     same direction that Peach was facing when she fired.*/
-
     
     int ch;
     if (getWorld()->getKey(ch))
@@ -144,11 +128,27 @@ void Peach::doSomething(){
                 initiatedJump = true;
                 if(p_jump) remaining_jump_distance = 12;
                 else remaining_jump_distance = 8;
+                getWorld()->startedGame = true;
             getWorld()->playSound(SOUND_PLAYER_JUMP);
                 
             }
             break;
         case KEY_PRESS_SPACE:
+            //  space bar:
+            /* i. If Peach doesn’t have Shoot Power, then do nothing
+             ii. Otherwise, if the time_to_recharge_before_next_fire is greater
+             than zero, then do nothing.
+             iii. Otherwise:
+             1. Play the sound SOUND_PLAYER_FIRE using the
+             playSound() method in the GameWorld class.
+             2. Set time_to_recharge_before_next_fire to 8, meaning that
+             Peach may not fire again for another 8 game ticks
+             3. Determine the x,y position directly in front of Peach that is
+             4 pixels away in the direction she’s facing.
+             4. Introduce a new fireball object at this location into your
+             StudentWorld. The fireball must have its direction set to the
+             same direction that Peach was facing when she fired.*/
+
             if(getWorld()->checkPos(getX(),getY()-4, this)) //check if blocked
                 moveTo(getX(), getY()-4);
             break;

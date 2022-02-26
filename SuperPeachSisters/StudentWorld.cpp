@@ -34,6 +34,13 @@ bool StudentWorld::overlapWithEnemy(Actor* primary){
     return false;
 }
 
+bool StudentWorld::overlapsPeach(Actor* a) {
+    if (overlap(m_peach->getX(),m_peach->getY(), a->getX(), a->getY())){
+        return true;
+    }
+    return false;
+}
+
 bool StudentWorld::overlapThenBonk(Actor* a1){
     for (auto a : actors)
         if (a != a1)
@@ -45,12 +52,11 @@ bool StudentWorld::overlapThenBonk(Actor* a1){
 
 }
 
-bool StudentWorld::blockThenBonk(int x, int &y, Actor* a1){
+bool StudentWorld::blockThenBonk(int x, int &y, Actor* a1) {
     for (auto a : actors)
         if (a != a1)
             if (a->checkifAlive() && !checkPos(x, y, a1)){
                 a->bonk();
-                playSound(SOUND_PLAYER_BONK);
                 return true;
             }
     return false;
@@ -100,10 +106,11 @@ int StudentWorld::init()
                 case Level::empty:
                     break;
                 case Level::flag:
-                    actors.push_back(new Flag(this, x, y));
+                    m_flag = new Flag(this, x, y);
                     break;
                 case Level::mario:
-                    actors.push_back(new Mario(this, x, y));
+                    m_mario = new Mario(this, x, y);
+                    marioisHere = true;
                     break;
             }
             }}
@@ -118,12 +125,52 @@ int StudentWorld::move()
     for(Actor *a: actors)
         a->doSomething();
     
-    return GWSTATUS_CONTINUE_GAME;
     
-    // This code is here merely to allow the game to build, run, and terminate after you hit enter.
-    // Notice that the return value GWSTATUS_PLAYER_DIED will cause our framework to end the current level.
-    // decLives();
-   // return GWSTATUS_PLAYER_DIED;
+    //  if peach has died
+    if(m_peach->checkifAlive() == false){
+        playSound(SOUND_PLAYER_DIE);
+        return GWSTATUS_PLAYER_DIED;
+    }
+    
+    // overlaps with flag
+    /*If Peach has reached a flag (overlaps with them), then it’s time to advance to the
+     next level. In this case, the move() method must:
+     a. Play a SOUND_FINISHED_LEVEL sound using playSound().
+     b. Immediately return with a value of GWSTATUS_FINISHED_LEVEL.
+     */
+    
+
+    stage_complete = overlapsPeach(m_flag);
+    
+    if(startedGame && stage_complete){
+        playSound(SOUND_FINISHED_LEVEL);
+        return GWSTATUS_FINISHED_LEVEL;
+    }
+    stage_complete = false;
+    // overlaps with mario
+    /*If Peach has reached Mario (overlaps with him), then the player has won and the
+     game is over. In this case, the move() method must:
+     a. Play a SOUND_GAME_OVER sound using playSound().
+     b. Immediately return with a value of GWSTATUS_PLAYER_WON.*/
+   if(marioisHere) stage_complete = overlapsPeach(m_mario);
+    
+    if(stage_complete){
+        playSound(SOUND_GAME_OVER);
+        return GWSTATUS_PLAYER_WON;
+    }
+    
+    stage_complete = false;
+    
+    // delete all dead actors
+    for(Actor *a: actors)
+        if(!a->checkifAlive())
+            delete a;
+    
+    // update score status
+    
+    
+    
+    return GWSTATUS_CONTINUE_GAME;
 }
 
 void StudentWorld::cleanUp()
@@ -162,12 +209,5 @@ bool StudentWorld::checkPos(int a, int b, Actor* act){
 
     }
         return true;
-/*
-    for (auto a : actors)
-            if (c != me)
-                if (c->checkifAlive() && c->solidObject())
-                    if (overlap(act, c))
-                        return false;
-        return true;
- */
+
 }

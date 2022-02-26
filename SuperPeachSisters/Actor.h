@@ -18,9 +18,8 @@ public:
     void die(){ isAlive = false;}
     virtual bool isEnemy(){return false;}
     virtual void bonk() {return;}
-protected:
-    bool isAlive;
 private:
+    bool isAlive;
     StudentWorld* m_world;
 };
 
@@ -40,7 +39,6 @@ class Flag: public Overlapable{
     public:
     Flag(StudentWorld* world, int x_level, int y_level): Overlapable(world, IID_FLAG,  x_level, y_level, 1 , 0){};
     virtual void doSomething(){return;}
-    virtual bool isEnemy(){return false;}
 };
 
 // Mario
@@ -180,42 +178,47 @@ class Pipe: public Actor{
 //peach
 class Peach: public Actor{ // check name
 public:
-    Peach(StudentWorld* world, int x_level, int y_level): Actor(world, IID_PEACH, x_level, y_level, 0 , 0), m_hitpoints(1), p_star(false), p_jump(false), p_shoot(false), p_invincible(false), star_ticks(0), temp_ticks(0){};
+    Peach(StudentWorld* world, int x_level, int y_level): Actor(world, IID_PEACH, x_level, y_level, 0 , 0), m_hitpoints(1), p_jump(false), p_shoot(false), p_invincible(false){};
     
     virtual void doSomething();
     virtual bool solidObject(){return true;}
-    // give powers
-    void giveStarPower(){p_star = true;}
-    void giveJumpPower(){p_jump = true;}
-    void giveShootPower(){p_shoot = true;}
-    void giveInvincPower(){p_invincible = true;} // temporary
-    // get whether Peach has the power or not
-    bool getStarPower(){return p_star;}
-    bool getJumpPower(){return p_jump;}
-    bool getShootPower(){return p_shoot;}
-    bool getInvinPower(){return p_invincible;} // temporary
-    // add health point
-    void changeHit(int num){ m_hitpoints+= num;}
     
-    //ticks
-    int getStarTicks(){return star_ticks;}
-    //  check if overlapping
-    //  do two actors overlap?
+    // get whether Peach has the power or not
+    bool hasJumpPower(){return p_jump;}
+    bool hasShootPower(){return p_shoot;}
+    bool hasInvinPower(){return p_invincible;} // temporary
+   
+    void sufferDamageIfDamageable();
+        
+          // Set Peach's hit points.
+        void setHP(int hp);
+        
+          // Grant Peach invincibility for this number of ticks.
+        void gainInvincibility(int ticks);
+        
+          // Grant Peach Shoot Power.
+        void gainShootPower();
+
+          // Grant Peach Jump Power.
+        void gainJumpPower();
+        
+          // Is Peach invincible?
+        bool isInvincible() const;
+        
+          // Does Peach have Shoot Power?
+        bool hasShootPower() const;
+
+          // Does Peach have Jump Power?
+        bool hasJumpPower() const;
+
   
     
 private:
-    double m_hitpoints;
-    double m_damage;
-    bool p_star, p_jump, p_shoot, p_invincible;
-    int star_ticks, temp_ticks;
-    // use powers
-    void useStarPower();
-    void useJumpPower();
-    void useShootPower();
-    void useInvinc(); // temporary
+    //  damage and health
+    double m_hitpoints; double m_damage;
+    bool p_jump, p_shoot, p_invincible;
     
-    //  jump
-
+// for use of jumping and movement
     bool initiatedJump = false;
     bool fallingJump = false;
     int remaining_jump_distance = 0;
