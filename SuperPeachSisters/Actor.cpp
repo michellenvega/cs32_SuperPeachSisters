@@ -3,6 +3,62 @@
 
 // Students:  Add code to this file, Actor.h, StudentWorld.h, and StudentWorld.cpp
 
+void Mushroom::doSomething(){
+    if(getWorld()->overlapsPeach(this)){ // Mushroom object must see if it currently overlaps with Peach.
+        //   It will increase the player’s score by 75 points
+        getWorld()->increaseScore(75);
+        //   It will inform the Peach object that it now has the Jump Power
+        getWorld()->grantJumpPower();
+        //  It will set Peach’s hit points to 2
+        getWorld()->setPeachHP(2);
+        //  It will immediately set its state to not-alive
+        die();
+        //  It will play a sound of SOUND_PLAYER_POWERUP using GameWorld’s playSound() method
+        getWorld()->playSound(SOUND_PLAYER_POWERUP);
+        //  It will do nothing else and immediately return
+        return;
+    }
+    
+    /*
+     Mushroom object must determine if there is an object just beneath
+     it that would block it from falling two pixels downward. If there is no such
+     blocking object beneath the Mushroom, it will:
+     */
+        //  Use the moveTo() method to move downward 2 pixels
+    int x2 = getX(); int y2 = getY();
+    if(getWorld()->checkPos(x2,y2,this))
+        y2--;
+        if(getWorld()->checkPos(x2,y2,this))
+            y2--;
+                    moveTo(x2,y2);
+    
+    
+    
+    /*
+     The Mushroom object will then determine what direction it is facing (0 or 180
+     degrees) and try to move in that direction by 2 pixels:
+     */
+    
+    
+    int d = getDirection();
+    setDirection(d);
+    moveTo(getX()+2, getY());
+    
+    
+    /*
+     a. The Mushroom will calculate a target x,y position first (2 pixels greater or
+     less than its current x position)
+     b. The Mushroom will check to see if there is an object that would block
+     movement to this destination position. If so:
+     i. The Mushroom will reverse its direction (from 0 to 180, or vice
+     versa)
+     ii. The Mushroom will do nothing else and immediately return
+     c. Otherwise, the Mushroom will update its location 2 pixels leftward or
+     rightward depending on the direction it’s facing.
+     */
+    
+   }
+
 void Block::bonk(){
     if(checkifAlive()){
         getWorld()->playSound(SOUND_PLAYER_BONK);
@@ -127,7 +183,7 @@ void Peach::doSomething(){
             if(!getWorld()->checkPos(getX(), getY()-1, this)){
                 initiatedJump = true;
                 if(p_jump) remaining_jump_distance = 12;
-                else remaining_jump_distance = 8;
+                else remaining_jump_distance = 12;
                 getWorld()->startedGame = true;
             getWorld()->playSound(SOUND_PLAYER_JUMP);
                 

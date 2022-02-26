@@ -20,6 +20,7 @@ StudentWorld::StudentWorld(string assetPath): GameWorld(assetPath)
 
    
 bool StudentWorld::overlap(int x1, int y1, int x2, int y2){
+    
     if (x1 + SPRITE_WIDTH > x2 && x1 < x2 + SPRITE_WIDTH)
             if (y1 + SPRITE_HEIGHT > y2 && y1 < y2 + SPRITE_HEIGHT)
                 return true;
@@ -138,11 +139,10 @@ int StudentWorld::move()
      a. Play a SOUND_FINISHED_LEVEL sound using playSound().
      b. Immediately return with a value of GWSTATUS_FINISHED_LEVEL.
      */
-    
-
     stage_complete = overlapsPeach(m_flag);
     
     if(startedGame && stage_complete){
+        increaseScore(1000);
         playSound(SOUND_FINISHED_LEVEL);
         return GWSTATUS_FINISHED_LEVEL;
     }
@@ -155,6 +155,7 @@ int StudentWorld::move()
    if(marioisHere) stage_complete = overlapsPeach(m_mario);
     
     if(stage_complete){
+       increaseScore(1000);
         playSound(SOUND_GAME_OVER);
         return GWSTATUS_PLAYER_WON;
     }
@@ -181,6 +182,12 @@ void StudentWorld::cleanUp()
 
     delete m_peach;
     m_peach = nullptr;
+    
+    delete m_flag;
+    m_flag = nullptr;
+    
+  
+    m_mario = nullptr;
 }
 
 StudentWorld::~StudentWorld(){

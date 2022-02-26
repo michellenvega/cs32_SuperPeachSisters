@@ -81,7 +81,7 @@ class Mario: public Overlapable{
  public:
     Mushroom(StudentWorld* world, int x_level, int y_level) :
          Goodie(world, IID_MUSHROOM, x_level, y_level) {};
-     virtual void doSomething(){return;}
+     virtual void doSomething();
  private:
      virtual void giveGoodie(){return;}
  };

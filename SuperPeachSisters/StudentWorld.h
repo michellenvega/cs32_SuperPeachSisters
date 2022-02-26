@@ -68,7 +68,7 @@ public:
     bool getPeachTargetingInfo(Actor* a, int yDeltaLimit, int& xDeltaFromActor) const;
     
     // Set Peach's hit points to hp.
-    void setPeachHP(int hp) const;
+    void setPeachHP(int hp) const{return;}
     
     // Grant Peach invincibility for this number of ticks.
     void grantInvincibility(int ticks) const;
@@ -77,7 +77,7 @@ public:
     void grantShootPower() const;
     
     // Grant Peach Jump Power.
-    void grantJumpPower() const;
+    void grantJumpPower() const{return;}
     
     // Return true if a overlaps an enemy; otherwise, return false.
     bool overlapWithEnemy(Actor* primary);
