@@ -83,7 +83,7 @@ public:
     bool overlapWithEnemy(Actor* primary);
     
     // if blocking position, bonk the second actor
-    bool blockThenBonk(int x, int y, Actor* a1) ;
+    bool blockThenBonk(int x, int y, Actor* a1, bool bonk) ;
     
     // if blocking position, set true
     bool isBlocked(int x, int y, Actor* a1) ;

@@ -26,7 +26,7 @@ void Mushroom::doSomething(){
      blocking object beneath the Mushroom, it will:
      */
         //  Use the moveTo() method to move downward 2 pixels
-    bool canMove = false;
+
     int x2 = getX(); int y2 = getY();
   
         if(getWorld()->checkPos(x2,y2,this)) {
@@ -34,15 +34,10 @@ void Mushroom::doSomething(){
             if(getWorld()->checkPos(x2,y2,this)) {
                 y2--;
            
-            } else canMove = true;
-        } else
-            canMove = true;
+            }}
     moveTo(x2,y2);
     
-    while(getWorld()->checkPos(x2,y2,this)){
-        y2--;
-        }
-    moveTo(x2,y2);
+
     /*
      The Mushroom object will then determine what direction it is facing (0 or 180
      degrees) and try to move in that direction by 2 pixels:
@@ -60,14 +55,14 @@ void Mushroom::doSomething(){
     
     if(d == 180) {
       //&& getWorld()->blockThenBonked(testX-2, testY-1, this)
-        if(getWorld()->blockThenBonk(testX-2, testY, this) && getWorld()->blockThenBonk(testX-1, testY, this)){
+        if(getWorld()->blockThenBonk(testX-2, testY, this, false) && getWorld()->blockThenBonk(testX-1, testY, this, false)){
             d = 0;
         setDirection(d);
         return;
         }
     }
     else{
-        if(getWorld()->blockThenBonk(testX+2, testY, this) && getWorld()->blockThenBonk(testX+1, testY, this)){
+        if(getWorld()->blockThenBonk(testX+2, testY, this, false) && getWorld()->blockThenBonk(testX+1, testY, this, false)){
         d = 180;
         setDirection(d);
         return;
@@ -76,8 +71,8 @@ void Mushroom::doSomething(){
 
     
     // Otherwise, the Mushroom will update its location 2 pixels leftward or rightward depending on the direction it’s facing.
-    if(d==0 && canMove)    moveTo(getX()+2, getY());
-    else if(canMove)       moveTo(getX()-2, getY());
+    if(d==0)    moveTo(getX()+2, getY());
+    else       moveTo(getX()-2, getY());
     
    }
 
@@ -118,10 +113,7 @@ void Flower::doSomething(){
         }
     moveTo(x2,y2);
     
-    while(getWorld()->checkPos(x2,y2,this)){
-        y2--;
-        }
-    moveTo(x2,y2);
+
     /*
      The Flower object will then determine what direction it is facing (0 or 180
      degrees) and try to move in that direction by 2 pixels:
@@ -139,14 +131,14 @@ void Flower::doSomething(){
     //  The Flower will reverse its direction (from 0 to 180, or vice versa)
     int d = getDirection();
     if(d == 180) {
-        if(getWorld()->blockThenBonk(testX-2, testY, this) && getWorld()->blockThenBonk(testX-1, testY, this)){
+        if(getWorld()->blockThenBonk(testX-2, testY, this, false) && getWorld()->blockThenBonk(testX-1, testY, this, false)){
             d = 0;
         setDirection(d);
         return;
         }
     }
     else{
-        if(getWorld()->blockThenBonk(testX+2, testY, this) && getWorld()->blockThenBonk(testX+1, testY, this)){
+        if(getWorld()->blockThenBonk(testX+2, testY, this, false) && getWorld()->blockThenBonk(testX+1, testY, this, false)){
         d = 180;
         setDirection(d);
         return;
@@ -187,18 +179,11 @@ void Star::doSomething(){
     int x2 = getX(); int y2 = getY();
   
         if(getWorld()->checkPos(x2,y2,this)) {
-            
             y2--;
             if(getWorld()->checkPos(x2,y2,this)) {
                 y2--;
            
-            }
-        }
-    moveTo(x2,y2);
-    
-    while(getWorld()->checkPos(x2,y2,this)){
-        y2--;
-        }
+            }}
     moveTo(x2,y2);
     /*
      The Star object will then determine what direction it is facing (0 or 180
@@ -217,14 +202,14 @@ void Star::doSomething(){
     //  The Star will reverse its direction (from 0 to 180, or vice versa)
     int d = getDirection();
     if(d == 180) {
-        if(getWorld()->blockThenBonk(testX-2, testY, this) && getWorld()->blockThenBonk(testX-1, testY, this)){
+        if(getWorld()->blockThenBonk(testX-2, testY, this, false) && getWorld()->blockThenBonk(testX-1, testY, this, false)){
             d = 0;
         setDirection(d);
         return;
         }
     }
     else{
-        if(getWorld()->blockThenBonk(testX+2, testY, this) && getWorld()->blockThenBonk(testX+1, testY, this)){
+        if(getWorld()->blockThenBonk(testX+2, testY, this, false) && getWorld()->blockThenBonk(testX+1, testY, this, false)){
         d = 180;
         setDirection(d);
         return;
@@ -310,7 +295,7 @@ void Peach::doSomething(){
        
             int x = getX(); int y = getY()+4;
             if(!getWorld()->checkPos(x, y, this)){
-                getWorld()->blockThenBonk(x, y, this);
+                getWorld()->blockThenBonk(x, y, this, true);
                 initiatedJump = false;
                 remaining_jump_distance = 0;
             }else{

@@ -94,7 +94,7 @@ bool StudentWorld::isBlocked(int x, int y, Actor* a1) {
             return true;
     return false;
 }
-bool StudentWorld::blockThenBonk(int x, int y, Actor* a1) {
+bool StudentWorld::blockThenBonk(int x, int y, Actor* a1, bool bonk) {
 
     y++;
     for (auto a : actors)
@@ -102,6 +102,7 @@ bool StudentWorld::blockThenBonk(int x, int y, Actor* a1) {
                 if (a->checkifAlive() && a->solidObject())
                     if (x + SPRITE_WIDTH > a->getX() && x < a->getX() + SPRITE_WIDTH)
                         if (y + SPRITE_HEIGHT > a->getY() && y < a->getY() + SPRITE_HEIGHT){
+                            if(bonk)
                                 a->bonk();
                             return true;
                             
