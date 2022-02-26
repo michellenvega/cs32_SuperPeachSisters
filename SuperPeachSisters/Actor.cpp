@@ -42,6 +42,16 @@ void Mushroom::doSomething(){
     
     int d = getDirection();
     setDirection(d);
+    int testX = getX(); int testY = getY();
+    
+    if(!getWorld()->checkPos(testX, testY, this)){
+        //  Check to see if there is an object that would block movement to this destination position
+        //  The Mushroom will reverse its direction (from 0 to 180, or vice versa)
+        if( d == 180 ) d = 0;
+        else d = 180;
+        setDirection(d);
+        
+    }
     moveTo(getX()+2, getY());
     
     
