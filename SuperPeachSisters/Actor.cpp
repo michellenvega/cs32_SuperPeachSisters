@@ -3,6 +3,41 @@
 
 // Students:  Add code to this file, Actor.h, StudentWorld.h, and StudentWorld.cpp
 
+
+
+// // // // // // // // // // // // // // //
+//      END OF LEVEL DECLARATIONS
+// // // // // // // // // // // // // // //
+
+
+ void Flag::doSomething(){  //   must check to see if it is alive, and if not, it must do nothing.
+     if(!checkifAlive()) return;
+     
+     
+     if(getWorld()->overlapsPeach(this))    //  e Flag must see if it currently overlaps with Peach. If so:
+     {
+         getWorld()->increaseScore(1000);   //  It will increase the player’s score by 1000 points
+         
+         die();     //  It will immediately set its state to not-alive
+         
+         getWorld()->finishedLevel(true);
+     }
+ }
+
+void Mario::doSomething(){
+    if(!checkifAlive()) return;
+    
+    
+    if(getWorld()->overlapsPeach(this))    //  e Flag must see if it currently overlaps with Peach. If so:
+    {
+        getWorld()->increaseScore(1000);   //  It will increase the player’s score by 1000 points
+        
+        die();     //  It will immediately set its state to not-alive
+        
+        getWorld()->wongame(true);
+    }
+}
+
 // // // // // // // // // // // // // // //
 //    GOODIES AND BLOCK IMPLEMENTATIONS
 // // // // // // // // // // // // // // //
@@ -177,7 +212,7 @@ void Star::doSomething(){
         getWorld()->setPeachHP(2);
         //  It will immediately set its state to not-alive
         die();
-        setVisible(false);
+       // setVisible(false);
         //  It will play a sound of SOUND_PLAYER_POWERUP using GameWorld’s playSound() method
         getWorld()->playSound(SOUND_PLAYER_POWERUP);
         //  It will do nothing else and immediately return
@@ -338,7 +373,7 @@ void PeachFireball::doSomething(){
 
 
 void PiranhaFireball::doSomething(){
-    
+    setVisible(true);
     //  Piranha Fireball object must see if it currently overlaps with a damageable object (other than Peach)
     //  If so:
     
@@ -360,7 +395,6 @@ void PiranhaFireball::doSomething(){
                 }
             }
     
-    moveTo(x2,y2);
    
     int testX = getX(); int testY = getY();
     
@@ -368,7 +402,7 @@ void PiranhaFireball::doSomething(){
     // The fireball will calculate a target x,y position first (2 pixels greater or  less than its current x position)
     //  Check to see if there is an object that would block movement to this destination position
     //  The fireball will reverse its direction (from 0 to 180, or vice versa)
-    int d = getDirection();
+    int d = direction;
     if(d == 180) {
         if(getWorld()->blockThenBonk(testX-2, testY, this, false) && getWorld()->blockThenBonk(testX-1, testY, this, false)){
             die();
@@ -384,7 +418,7 @@ void PiranhaFireball::doSomething(){
 
     
     // Otherwise, the Piranha Fireball will update its location 2 pixels leftward or rightward depending on the direction it’s facing.
-    if(d==0 )
+    if(d==0)
         moveTo(getX()+2, getY());
     else       moveTo(getX()-2, getY());
     
@@ -606,14 +640,14 @@ void Piranha::doSomething(){
         return;     //      The Piranha will immediately return
     }
     
+    
     //  will assume total = 1.5*SPRITE_HEIGHT y coordinate
     // greater than total but less than peach
     // less than total but greater than peach
     
-    
-    if(!getWorld()->overlap(getX(), getY()+ 1.5*SPRITE_HEIGHT, getWorld()->getPeach()->getX(), getWorld()->getPeach()->getY()) && !getWorld()->overlap(getX(), getY()- 1.5*SPRITE_HEIGHT, getWorld()->getPeach()->getX(), getWorld()->getPeach()->getY())){
-        return; //   If not, Piranha will immediately return and do nothing else
-    }
+    int p_y = getWorld()->getPeach()->getY();
+    if(p_y > getY() + 1.5*SPRITE_HEIGHT || p_y < getY() - 1.5*SPRITE_HEIGHT)
+        return;
     
     
     if(firingD != 0){   //  Piranha will check if it has a firing delay, and if so:
@@ -627,13 +661,17 @@ void Piranha::doSomething(){
     
     //  Compute distance between this and peach
     
-    int difference;
-    if(p_x > getX()) difference = p_x - getX();
-    else difference = getX() - p_x;
-    
-    if(difference > 8*SPRITE_WIDTH) return; // NOT IN RANGE
-    
+    if(p_x > getX() + 8*SPRITE_WIDTH || p_x <= getX() -  8*SPRITE_WIDTH)
+        return;
     //  If in range, then...
+    
+    // Find direction towards Peach
+    
+    int loc = getWorld()->getPeachTargetingInfo(this);
+    
+    if(loc < 0) setDirection(180);
+        else
+        setDirection(0);
     
     getWorld()->addPiranhaFireball(getX(), getY(), getDirection()); //  Add a new Piranha Fireball, same x, y, direction
     
@@ -665,11 +703,6 @@ void Piranha::damage(){
     die(); //   Set it to not alive
     
     }
-
-
-
-
-
 
 
 
@@ -831,6 +864,7 @@ void Peach::doSomething(){
 
 // Grant Peach invincibility for this number of ticks.
 void Peach::gainInvincibility(int ticks){
+    p_invincible = true;
     i_ticks = ticks;
 }
 
@@ -842,4 +876,9 @@ void Peach::gainShootPower(){
 // Grant Peach Jump Power.
 void Peach::gainJumpPower(){
     p_jump = true;
+}
+
+void Peach::setHP(int hp)
+{
+    m_hitpoints = hp;
 }

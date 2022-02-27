@@ -34,8 +34,6 @@ void StudentWorld::addPeachFireball(int x, int y, int dir){
 void StudentWorld::addPiranhaFireball(int x, int y, int dir){
     PiranhaFireball *pf = new PiranhaFireball(this, x, y, dir);
     actors.push_back(pf);
-    pf->setDirection(dir);
-    pf->setVisible(true);
 }
 
 bool StudentWorld::addShell(int x, int y, int dir){
@@ -83,7 +81,7 @@ bool StudentWorld::addMushroom(int x, int y){
 // // // // // // // // // // // // // // //
 
 
-bool StudentWorld::isEmpty(double x, double y) { 
+bool StudentWorld::isEmpty(double x, double y) {
     for (auto a : actors)
         if (a->checkifAlive())
             if (overlap(x, y, a->getX(), a->getY()))
@@ -94,9 +92,9 @@ bool StudentWorld::isEmpty(double x, double y) {
 int StudentWorld::getPeachTargetingInfo(Actor* a) const{
     int y1 = a->getY();
     int y2 = m_peach->getY();
-    if (y1 + SPRITE_HEIGHT > y2 && y1 < y2 + SPRITE_HEIGHT)
+   // if (y1 + SPRITE_HEIGHT > y2 && y1 < y2 + SPRITE_HEIGHT)
         return m_peach->getX() - a->getX();
-    return 0;
+   // return 0;
 }
 
 
@@ -212,6 +210,9 @@ bool StudentWorld::damageOverlappingActor(Actor* damager) const {
     
 }
 
+void StudentWorld::setPeachHP(int hp) const{
+    m_peach->setHP(hp);
+}
 
 
 // // // // // // // // // // // // // // //
@@ -272,7 +273,7 @@ int StudentWorld::init()
                case Level::goomba:
                     actors.push_back(new Goomba(this, x, y));
                     break;
-                     case Level::piranha:
+                case Level::piranha:
                     actors.push_back(new Piranha(this, x, y));
                     break;
                 case Level::empty:
@@ -281,7 +282,7 @@ int StudentWorld::init()
                     m_flag = new Flag(this, x, y);
                     break;
                 case Level::mario:
-                  //  m_mario = new Mario(this, x, y);
+                    m_mario = new Mario(this, x, y);
                     marioisHere = true;
                     break;
             }
@@ -294,7 +295,6 @@ int StudentWorld::init()
 int StudentWorld::move()
 {
     m_peach->doSomething();
-    m_flag->doSomething();
     for (auto it = actors.begin(); it != actors.end(); it++) {
         if ((*it)->checkifAlive()) {
             (*it)->doSomething();
@@ -326,15 +326,14 @@ int StudentWorld::move()
      game is over. In this case, the move() method must:
      a. Play a SOUND_GAME_OVER sound using playSound().
      b. Immediately return with a value of GWSTATUS_PLAYER_WON.*/
-   if(marioisHere) stage_complete = overlapsPeach(m_mario);
+
     
-    if(stage_complete){
+    if(wonGame){
        increaseScore(1000);
         playSound(SOUND_GAME_OVER);
         return GWSTATUS_PLAYER_WON;
     }
-    
-    stage_complete = false;
+
     
     for (auto it = actors.begin(); it != actors.end(); it++) {
         if (!(*it)->checkifAlive()) {
@@ -343,9 +342,22 @@ int StudentWorld::move()
             it = actors.begin();
         }
     }
+    
     // update score status
-    
-    
+    string normal =
+    "Lives: " + to_string(getLives()) + "  " + "Level: 0" + to_string(getLevel())
+    + "  " + "Points: 000" + to_string(getScore());
+    string text = normal;
+if(!m_peach->hasShootPower() && !m_peach->hasJumpPower() && !m_peach->isInvincible())
+    setGameStatText(normal);
+if(m_peach->isInvincible())
+    text = text + " " + "StarPower!";
+    if(m_peach->hasShootPower())
+        text = text + "  " + "ShootPower!";
+        if(m_peach->hasJumpPower())
+            text = text + "  " + "JumpPower!";
+       
+    setGameStatText(text);
     
     return GWSTATUS_CONTINUE_GAME;
 }

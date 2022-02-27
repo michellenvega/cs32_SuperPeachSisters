@@ -88,13 +88,13 @@ class Overlapable : public Actor {
 class Flag: public Overlapable{
     public:
     Flag(StudentWorld* world, int x_level, int y_level): Overlapable(world, IID_FLAG,  x_level, y_level, 1 , 0){};
-    virtual void doSomething(){return;}
+    virtual void doSomething();
 };
 
 class Mario: public Overlapable{
     public:
     Mario(StudentWorld* world, int x_level, int y_level): Overlapable(world, IID_MARIO, x_level, y_level, 1 , 0){};
-    virtual void doSomething(){return;}
+    virtual void doSomething();
 };
 
 
@@ -173,13 +173,16 @@ public:
     PeachFireball(StudentWorld* world, int x_level, int y_level, int dir) :
         Projectile(world, IID_PEACH_FIRE, x_level, y_level, dir) {};
     virtual void doSomething();
+    
 };
 
 class PiranhaFireball : public Projectile {
 public:
     PiranhaFireball(StudentWorld* world, int x_level, int y_level, int dir) :
-        Projectile(world, IID_PIRANHA_FIRE, x_level, y_level, dir)  {};
+        Projectile(world, IID_PIRANHA_FIRE, x_level, y_level, dir), direction(dir)  {};
     virtual void doSomething();
+private:
+    int direction;
 };
 
 
@@ -259,6 +262,8 @@ public:
     
     // Set Peach's hit points.
     void addHP(int hp);
+    
+    void setHP(int hp);
     
     // Grant Peach invincibility for this number of ticks.
     void gainInvincibility(int ticks);

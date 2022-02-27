@@ -20,10 +20,12 @@ public:
    ~StudentWorld();
     bool checkPos(int x, int y, Actor* act);
     bool checkPosBelow(int a, int b);
-    void finishedLevel(){
-        stage_complete = true;
+    void finishedLevel(bool done){
+        stage_complete = done;
     }
-    
+    void wongame(bool done){
+        wonGame = done;
+    }
     
     // // // // // // // //
     // BEING USED
@@ -81,7 +83,7 @@ public:
     int getPeachTargetingInfo(Actor* a) const;
     
     // Set Peach's hit points to hp.
-    void setPeachHP(int hp) const{return;}
+    void setPeachHP(int hp) const;
     
     // Grant Peach invincibility for this number of ticks.
     void grantInvincibility(int ticks) const;
@@ -120,6 +122,7 @@ private:
     bool marioisHere = false;
     vector<Actor*> actors;
     bool stage_complete = false;
+    bool wonGame = false;
 };
 
 #endif // STUDENTWORLD_H_
