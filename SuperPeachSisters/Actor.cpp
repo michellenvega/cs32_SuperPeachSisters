@@ -42,9 +42,9 @@ void Mushroom::doSomething(){
      The Mushroom object will then determine what direction it is facing (0 or 180
      degrees) and try to move in that direction by 2 pixels:
      */
-    if(getWorld()->getPeachTargetingInfo(this) > 0)
-        setDirection(0);
-    else if(getWorld()->getPeachTargetingInfo(this) < 0) setDirection(180);
+    
+    
+    
     
     int d = getDirection();
     int testX = getX(); int testY = getY();
@@ -121,11 +121,7 @@ void Flower::doSomething(){
     
    
     int testX = getX(); int testY = getY();
-    
-    if(getWorld()->getPeachTargetingInfo(this) > 0)
-        setDirection(0);
-    else if(getWorld()->getPeachTargetingInfo(this) < 0) setDirection(180);
-    
+
     // The Flower will calculate a target x,y position first (2 pixels greater or  less than its current x position)
     //  Check to see if there is an object that would block movement to this destination position
     //  The Flower will reverse its direction (from 0 to 180, or vice versa)
@@ -193,10 +189,7 @@ void Star::doSomething(){
    
     int testX = getX(); int testY = getY();
     
-    if(getWorld()->getPeachTargetingInfo(this) > 0)
-        setDirection(0);
-    else if(getWorld()->getPeachTargetingInfo(this) < 0) setDirection(180);
-    
+
     // The Star will calculate a target x,y position first (2 pixels greater or  less than its current x position)
     //  Check to see if there is an object that would block movement to this destination position
     //  The Star will reverse its direction (from 0 to 180, or vice versa)
