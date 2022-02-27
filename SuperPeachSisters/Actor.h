@@ -179,7 +179,7 @@ class PiranhaFireball : public Projectile {
 public:
     PiranhaFireball(StudentWorld* world, int x_level, int y_level, int dir) :
         Projectile(world, IID_PIRANHA_FIRE, x_level, y_level, dir)  {};
-    virtual void doSomething(){return;}
+    virtual void doSomething();
 };
 
 

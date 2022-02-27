@@ -14,7 +14,7 @@
 
 
 void Mushroom::doSomething(){
-    if(!isVisible()) return;
+    if(!checkifAlive()) return;
     if(getWorld()->overlapsPeach(this)){ // Mushroom object must see if it currently overlaps with Peach.
         //   It will increase the player’s score by 75 points
         getWorld()->increaseScore(75);
@@ -90,7 +90,7 @@ void Mushroom::doSomething(){
 
 
 void Flower::doSomething(){
-    if(!isVisible()) return;
+    if(!checkifAlive()) return;
     if(getWorld()->overlapsPeach(this)){ // Flower object must see if it currently overlaps with Peach.
         //   It will increase the player’s score by 50 points
         getWorld()->increaseScore(50);
@@ -167,7 +167,7 @@ void Flower::doSomething(){
 
 
 void Star::doSomething(){
-    if(!isVisible()) return;
+    if(!checkifAlive()) return;
     if(getWorld()->overlapsPeach(this)){ // Star object must see if it currently overlaps with Peach.
         //   It will increase the player’s score by 100 points
         getWorld()->increaseScore(100);
@@ -316,15 +316,13 @@ void PeachFireball::doSomething(){
     int d = getDirection();
     if(d == 180) {
         if(getWorld()->blockThenBonk(testX-2, testY, this, false) && getWorld()->blockThenBonk(testX-1, testY, this, false)){
-            d = 0;
-        setDirection(d);
+            die();
         return;
         }
     }
     else{
         if(getWorld()->blockThenBonk(testX+2, testY, this, false) && getWorld()->blockThenBonk(testX+1, testY, this, false)){
-        d = 180;
-        setDirection(d);
+            die();
         return;
         }
     }
@@ -342,7 +340,63 @@ void PeachFireball::doSomething(){
 
 
 
+void PiranhaFireball::doSomething(){
+    
+    // // // // //
+    // DAMAGES!!!
+    // // // // //
+    
+    
+    // coming soon
+    
+    
+    // // // // //
+    // next
+    // // // // //
+    
+    // Peach Fireball object must determine if there is an object just beneath
+    // it that would block it from falling two pixels downward
+    
+    int x2 = getX(); int y2 = getY();
+    if(getWorld()->checkPos(x2,y2,this)) {
+        y2--;
+        if(getWorld()->checkPos(x2,y2,this)) {
+                    y2--;
+                    moveTo(x2,y2);  //  Use the moveTo() method to move downward 2 pixels
+                }
+            }
+        
+   
+    int testX = getX(); int testY = getY();
+    
 
+    // The fireball will calculate a target x,y position first (2 pixels greater or  less than its current x position)
+    //  Check to see if there is an object that would block movement to this destination position
+    //  The Star will reverse its direction (from 0 to 180, or vice versa)
+    int d = getDirection();
+    if(d == 180) {
+        if(getWorld()->blockThenBonk(testX-2, testY, this, false) && getWorld()->blockThenBonk(testX-1, testY, this, false)){
+            die();
+        return;
+        }
+    }
+    else{
+        if(getWorld()->blockThenBonk(testX+2, testY, this, false) && getWorld()->blockThenBonk(testX+1, testY, this, false)){
+            die();
+        return;
+        }
+    }
+
+    
+    // Otherwise, the Star will update its location 2 pixels leftward or rightward depending on the direction it’s facing.
+    if(d==0 )    moveTo(getX()+2, getY());
+    else       moveTo(getX()-2, getY());
+    
+    
+    
+    
+    
+}
 
 
 

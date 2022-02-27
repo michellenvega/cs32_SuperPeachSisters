@@ -35,7 +35,6 @@ void StudentWorld::addPiranhaFireball(int x, int y, int dir){
     PiranhaFireball *pf = new PiranhaFireball(this, x, y, dir);
     actors.push_back(pf);
     pf->setDirection(dir);
-    pf->moveTo(x,y);
     pf->setVisible(true);
 }
 
@@ -318,11 +317,13 @@ int StudentWorld::move()
     
     stage_complete = false;
     
-    // delete all dead actors
-   /* for(Actor *a: actors)
-        if(!a->checkifAlive())
-            delete a;
-    */
+    for (auto it = actors.begin(); it != actors.end(); it++) {
+        if (!(*it)->checkifAlive()) {
+            delete *it;
+            actors.erase(it);
+            it = actors.begin();
+        }
+    }
     // update score status
     
     
