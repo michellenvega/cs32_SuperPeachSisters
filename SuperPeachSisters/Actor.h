@@ -104,7 +104,7 @@ public:
 class Goomba : public Enemy{
 public:
     Goomba(StudentWorld* world, int x_level, int y_level)  : Enemy(world, IID_GOOMBA, x_level, y_level) {};
-    virtual void doSomething(){return;}
+    virtual void doSomething();
     virtual void bonk(){return;}
 };
 
@@ -112,7 +112,7 @@ public:
 class Koopa : public Enemy{
 public:
     Koopa(StudentWorld* world, int x_level, int y_level)  :  Enemy(world, IID_KOOPA, x_level, y_level){};
-    virtual void doSomething(){return;}
+    virtual void doSomething();
     virtual void bonk(){return;}
 };
 

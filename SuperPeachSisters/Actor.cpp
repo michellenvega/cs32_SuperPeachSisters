@@ -43,9 +43,6 @@ void Mushroom::doSomething(){
      degrees) and try to move in that direction by 2 pixels:
      */
     
-    
-    
-    
     int d = getDirection();
     int testX = getX(); int testY = getY();
     // The Mushroom will calculate a target x,y position first (2 pixels greater or  less than its current x position)
@@ -181,6 +178,7 @@ void Star::doSomething(){
            
             }}
     moveTo(x2,y2);
+    
     /*
      The Star object will then determine what direction it is facing (0 or 180
      degrees) and try to move in that direction by 2 pixels:
@@ -245,6 +243,82 @@ void Block::bonk(){
     }
     
 
+    
+}
+
+
+void Koopa::doSomething(){
+    if(!checkifAlive()) return; //      if dead, return
+    
+    if(getWorld()->overlapsPeach(this))//  check to see if it overlaps with Peach at its current location
+    {   // if so
+        getWorld()->bonkPeach();    //      The Koopa will attempt to bonk Peach
+        return;     //      The Koopa will immediately return
+    }
+    
+    //      Determine if it can move 1 pixel in its current direction without running into an object that blocks movement
+    //      If not, switch to the opposite direction
+    
+    int testX = getX(); int testY = getY();
+    int d = getDirection();
+    if(d == 180) {
+        if(getWorld()->blockThenBonk(testX-1-SPRITE_WIDTH, testY, this, false) || getWorld()->checkPos(testX-1-SPRITE_WIDTH,testY-1,this)){
+            d = 0;
+        setDirection(d);
+        return;
+        }
+      
+    }
+    else{
+        if(getWorld()->blockThenBonk(testX+1+SPRITE_WIDTH, testY, this, false) || getWorld()->checkPos(testX+1+SPRITE_WIDTH,testY-1,this)){
+        d = 180;
+        setDirection(d);
+        return;
+        }
+    }
+    // Otherwise, the Koopa will update its location 1 pixel leftward or rightward depending on the direction it’s facing
+    if(d==0 )    moveTo(getX()+1, getY());
+        else       moveTo(getX()-1, getY());
+    
+
+    
+    
+}
+
+void Goomba::doSomething(){
+    if(!checkifAlive()) return; //      if dead, return
+    if(getWorld()->overlapsPeach(this))//  check to see if it overlaps with Peach at its current location
+    {   // if so
+        getWorld()->bonkPeach();    //      The Koopa will attempt to bonk Peach
+        return;     //      The Koopa will immediately return
+    }
+    
+    //      Determine if it can move 1 pixel in its current direction without running into an object that blocks movement
+    //      If not, switch to the opposite direction
+   
+    int testX = getX(); int testY = getY();
+    int d = getDirection();
+    
+    if(d == 180) {
+        if(getWorld()->blockThenBonk(testX-1, testY, this, false) || getWorld()->blockThenBonk(testX-1, testY-1, this, false)){
+        setDirection(0);
+        return;
+        }
+    }
+    else{
+        if(getWorld()->blockThenBonk(testX+1, testY, this, false) || getWorld()->blockThenBonk(testX+1, testY-1, this, false)){
+        setDirection(180);
+        return;
+        }
+    }
+    
+    d = getDirection();
+    // Otherwise, the Koopa will update its location 1 pixel leftward or rightward depending on the direction it’s facing
+    if(d==0 )    moveTo(getX()+1, getY());
+    else       moveTo(getX()-1, getY());
+    
+
+    
     
 }
 

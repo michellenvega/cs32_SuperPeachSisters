@@ -42,7 +42,9 @@ public:
     bool addPeachFireball(int x, int y);
     bool addPiranhaFireball(int x, int y);
     
-    
+    void bonkPeach(){
+        m_peach->bonk();
+    }
     // if Peach overlaps, bonk the second actor
     bool overlapThenBonk(Actor* a1);
     
@@ -61,10 +63,7 @@ public:
     // Return true if a overlaps Peach; otherwise, return false.
     bool overlapsPeach(Actor* a) ;
     
-    // If the y cooodinates of a and Peach are at least yDeltaLimit apart,
-    // return false; otherwise, set xDeltaFromActor to the difference
-    // between Peach's and a's x coordinates (positive means Peach is to
-    // the right of a) and return true.
+    //  find out how far actor is from peach
     int getPeachTargetingInfo(Actor* a) const;
     
     // Set Peach's hit points to hp.
