@@ -111,7 +111,7 @@ public:
     bool isEmpty(double x, double y) ;
     
     // overlap
-    bool overlap(int x1, int y1, int x2, int y2);
+    bool overlap(int x1, int y1, int x2, int y2) const;
 
 private:
     Peach* m_peach;

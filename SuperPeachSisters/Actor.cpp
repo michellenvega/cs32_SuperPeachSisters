@@ -282,17 +282,14 @@ void Block::bonk(Actor* bonker){
 
 void PeachFireball::doSomething(){
     
-    // // // // //
-    // DAMAGES!!!
-    // // // // //
+    //  Peach Fireball object must see if it currently overlaps with a damageable object (other than Peach)
+    //  If so:
+    if(getWorld()->damageOverlappingActor(this)){   //  It will inform the object that it has been damaged.
     
-    
-    // coming soon
-    
-    
-    // // // // //
-    // next
-    // // // // //
+        die();      //  It will immediately set its own state to not-alive
+        return;     //  It will do nothing else and immediately return
+    }
+
     
     // Peach Fireball object must determine if there is an object just beneath
     // it that would block it from falling two pixels downward
@@ -312,7 +309,7 @@ void PeachFireball::doSomething(){
 
     // The fireball will calculate a target x,y position first (2 pixels greater or  less than its current x position)
     //  Check to see if there is an object that would block movement to this destination position
-    //  The Star will reverse its direction (from 0 to 180, or vice versa)
+    //  The fireball will reverse its direction (from 0 to 180, or vice versa)
     int d = getDirection();
     if(d == 180) {
         if(getWorld()->blockThenBonk(testX-2, testY, this, false) && getWorld()->blockThenBonk(testX-1, testY, this, false)){
@@ -328,7 +325,7 @@ void PeachFireball::doSomething(){
     }
 
     
-    // Otherwise, the Star will update its location 2 pixels leftward or rightward depending on the direction it’s facing.
+    // Otherwise, the Fireball will update its location 2 pixels leftward or rightward depending on the direction it’s facing.
     if(d==0 )    moveTo(getX()+2, getY());
     else       moveTo(getX()-2, getY());
     
@@ -342,19 +339,16 @@ void PeachFireball::doSomething(){
 
 void PiranhaFireball::doSomething(){
     
-    // // // // //
-    // DAMAGES!!!
-    // // // // //
+    //  Piranha Fireball object must see if it currently overlaps with a damageable object (other than Peach)
+    //  If so:
     
+    if(getWorld()->damageOverlappingActor(this)){   //  It will inform the object that it has been damaged.
     
-    // coming soon
+        die();      //  It will immediately set its own state to not-alive
+        return;     //  It will do nothing else and immediately return
+    }
     
-    
-    // // // // //
-    // next
-    // // // // //
-    
-    // Peach Fireball object must determine if there is an object just beneath
+    // Piranha Fireball object must determine if there is an object just beneath
     // it that would block it from falling two pixels downward
     
     int x2 = getX(); int y2 = getY();
@@ -365,14 +359,15 @@ void PiranhaFireball::doSomething(){
                     moveTo(x2,y2);  //  Use the moveTo() method to move downward 2 pixels
                 }
             }
-        
+    
+    moveTo(x2,y2);
    
     int testX = getX(); int testY = getY();
     
 
     // The fireball will calculate a target x,y position first (2 pixels greater or  less than its current x position)
     //  Check to see if there is an object that would block movement to this destination position
-    //  The Star will reverse its direction (from 0 to 180, or vice versa)
+    //  The fireball will reverse its direction (from 0 to 180, or vice versa)
     int d = getDirection();
     if(d == 180) {
         if(getWorld()->blockThenBonk(testX-2, testY, this, false) && getWorld()->blockThenBonk(testX-1, testY, this, false)){
@@ -388,8 +383,9 @@ void PiranhaFireball::doSomething(){
     }
 
     
-    // Otherwise, the Star will update its location 2 pixels leftward or rightward depending on the direction it’s facing.
-    if(d==0 )    moveTo(getX()+2, getY());
+    // Otherwise, the Piranha Fireball will update its location 2 pixels leftward or rightward depending on the direction it’s facing.
+    if(d==0 )
+        moveTo(getX()+2, getY());
     else       moveTo(getX()-2, getY());
     
 }
@@ -397,19 +393,17 @@ void PiranhaFireball::doSomething(){
 
 
 void Shell::doSomething(){
-    // // // // //
-    // DAMAGES!!!
-    // // // // //
+
+    //  Shell object must see if it currently overlaps with a damageable object (other than Peach)
+    //  If so:
     
+    if(getWorld()->damageOverlappingActor(this)){   //  It will inform the object that it has been damaged.
     
-    // coming soon
+        die();      //  It will immediately set its own state to not-alive
+        return;     //  It will do nothing else and immediately return
+    }
     
-    
-    // // // // //
-    // next
-    // // // // //
-    
-    // Peach Fireball object must determine if there is an object just beneath
+    // Shell object must determine if there is an object just beneath
     // it that would block it from falling two pixels downward
     
     int x2 = getX(); int y2 = getY();
@@ -425,9 +419,9 @@ void Shell::doSomething(){
     int testX = getX(); int testY = getY();
     
 
-    // The fireball will calculate a target x,y position first (2 pixels greater or  less than its current x position)
+    // The shell will calculate a target x,y position first (2 pixels greater or  less than its current x position)
     //  Check to see if there is an object that would block movement to this destination position
-    //  The Star will reverse its direction (from 0 to 180, or vice versa)
+    //  The shell will reverse its direction (from 0 to 180, or vice versa)
     int d = getDirection();
     if(d == 180) {
         if(getWorld()->blockThenBonk(testX-2, testY, this, false) && getWorld()->blockThenBonk(testX-1, testY, this, false)){
@@ -443,7 +437,7 @@ void Shell::doSomething(){
     }
 
     
-    // Otherwise, the Star will update its location 2 pixels leftward or rightward depending on the direction it’s facing.
+    // Otherwise, the shell will update its location 2 pixels leftward or rightward depending on the direction it’s facing.
     if(d==0 )    moveTo(getX()+2, getY());
     else       moveTo(getX()-2, getY());
     
@@ -616,9 +610,11 @@ void Piranha::doSomething(){
     // greater than total but less than peach
     // less than total but greater than peach
     
+    
     if(!getWorld()->overlap(getX(), getY()+ 1.5*SPRITE_HEIGHT, getWorld()->getPeach()->getX(), getWorld()->getPeach()->getY()) && !getWorld()->overlap(getX(), getY()- 1.5*SPRITE_HEIGHT, getWorld()->getPeach()->getX(), getWorld()->getPeach()->getY())){
         return; //   If not, Piranha will immediately return and do nothing else
     }
+    
     
     if(firingD != 0){   //  Piranha will check if it has a firing delay, and if so:
         firingD--;          //  It will decrease the firing delay by one.
@@ -670,9 +666,39 @@ void Piranha::damage(){
     
     }
 
+
+
+
+
+
+
+
+
 // // // // // // // // // // // // // // //
 //         PEACH IMPLEMENTATIONS
 // // // // // // // // // // // // // // //
+
+void Peach::addHP(int hp){
+    m_hitpoints+=hp;
+}
+
+
+void Peach::bonk(Actor* bonker){
+    if(p_invincible) return;
+    
+    addHP(-1);      //  Decrement Peach’s hit points by one
+    
+    i_ticks = 10;   //  Set Peach’s temporary invincibility to 10 ticks
+    
+    if(p_shoot) p_shoot = false;    //  If Peach had Shoot Power, turn it off
+    if(p_jump) p_jump = false;      //  If Peach had Jump Power, turn it off
+    
+    if(m_hitpoints > 0)     //  If Peach has at least one hit point left
+        getWorld()->playSound(SOUND_PLAYER_HURT);    //  play the SOUND_PLAYER_HURT
+    
+    if(m_hitpoints <= 0)      //  If Peach hit points reach zero
+        die();
+}
 
 
 void Peach::doSomething(){

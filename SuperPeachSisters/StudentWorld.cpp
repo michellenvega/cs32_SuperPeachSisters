@@ -122,7 +122,7 @@ bool StudentWorld::checkPos(int a, int b, Actor* act){
         return true;
 
 }
-bool StudentWorld::overlap(int x1, int y1, int x2, int y2){
+bool StudentWorld::overlap(int x1, int y1, int x2, int y2) const{
     
     if (x1 + SPRITE_WIDTH > x2 && x1 < x2 + SPRITE_WIDTH)
             if (y1 + SPRITE_HEIGHT > y2 && y1 < y2 + SPRITE_HEIGHT)
@@ -181,7 +181,7 @@ bool StudentWorld::blockThenBonk(int x, int y, Actor* a1, bool bonk) {
 }
 
 // // // // // // // // // // // // // // //
-//      PEACH IMPLEMENTATIONS
+//      PEACH/ACTOR IMPLEMENTATIONS
 // // // // // // // // // // // // // // //
 
 // Grant Peach invincibility for this number of ticks.
@@ -199,7 +199,18 @@ void StudentWorld::grantJumpPower() const{
     m_peach->gainJumpPower();
 }
 
-
+bool StudentWorld::damageOverlappingActor(Actor* damager) const {
+    // If a non-Peach actor overlaps damager, damage that non-Peach actor
+    // and return true; otherwise, return false.
+    for (auto a : actors)
+            if (a != damager && a!= m_peach)
+                if (a->checkifAlive() && a->isDamageable() && overlap(damager->getX(),damager->getY(), a->getX(), a->getY())){
+                    a->damage();
+                    return true;
+                }
+    return false;
+    
+}
 
 
 

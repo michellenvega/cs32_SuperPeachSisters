@@ -258,7 +258,7 @@ public:
     void sufferDamageIfDamageable();
     
     // Set Peach's hit points.
-    void setHP(int hp);
+    void addHP(int hp);
     
     // Grant Peach invincibility for this number of ticks.
     void gainInvincibility(int ticks);
@@ -278,7 +278,8 @@ public:
     // Does Peach have Jump Power?
     bool hasJumpPower() const{return p_jump;}
     
-    
+    // bonk peach
+    virtual void bonk(Actor* bonker);
     
 private:
     //  damage and health
