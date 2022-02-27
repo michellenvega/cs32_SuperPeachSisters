@@ -70,7 +70,7 @@ public:
     
     // If Peach overlaps damager, damage her and return true; otherwise,
     // return false.
-    bool damageOverlappingPeach(Actor* damager) const;
+    bool damageOverlappingPeach(Actor* damager);
     
     // If a non-Peach actor overlaps damager, damage that non-Peach actor
     // and return true; otherwise, return false.
@@ -118,7 +118,8 @@ public:
 private:
     Peach* m_peach;
     Flag* m_flag;
-    Mario* m_mario;
+    Flag* m_mario;
+    int levels = 0;
     bool marioisHere = false;
     vector<Actor*> actors;
     bool stage_complete = false;

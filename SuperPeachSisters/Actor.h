@@ -183,6 +183,7 @@ public:
     virtual void doSomething();
 private:
     int direction;
+    bool attacked = false;
 };
 
 

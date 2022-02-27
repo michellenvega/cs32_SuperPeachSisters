@@ -34,6 +34,9 @@ void StudentWorld::addPeachFireball(int x, int y, int dir){
 void StudentWorld::addPiranhaFireball(int x, int y, int dir){
     PiranhaFireball *pf = new PiranhaFireball(this, x, y, dir);
     actors.push_back(pf);
+    pf->setDirection(dir);
+    pf->moveTo(x,y);
+    pf->setVisible(true);
 }
 
 bool StudentWorld::addShell(int x, int y, int dir){
@@ -90,11 +93,7 @@ bool StudentWorld::isEmpty(double x, double y) {
 }
 
 int StudentWorld::getPeachTargetingInfo(Actor* a) const{
-    int y1 = a->getY();
-    int y2 = m_peach->getY();
-   // if (y1 + SPRITE_HEIGHT > y2 && y1 < y2 + SPRITE_HEIGHT)
-        return m_peach->getX() - a->getX();
-   // return 0;
+          return m_peach->getX() - a->getX();
 }
 
 
@@ -210,6 +209,15 @@ bool StudentWorld::damageOverlappingActor(Actor* damager) const {
     
 }
 
+bool StudentWorld::damageOverlappingPeach(Actor* damager) {
+    // If a non-Peach actor overlaps Peach, damage Peach
+    // and return true; otherwise, return false.
+    if(overlapsPeach(damager))
+        m_peach->bonk(damager);
+    return true;
+    
+}
+
 void StudentWorld::setPeachHP(int hp) const{
     m_peach->setHP(hp);
 }
@@ -282,7 +290,7 @@ int StudentWorld::init()
                     m_flag = new Flag(this, x, y);
                     break;
                 case Level::mario:
-                    m_mario = new Mario(this, x, y);
+                    m_mario = new Flag(this, x, y);
                     marioisHere = true;
                     break;
             }
@@ -304,6 +312,7 @@ int StudentWorld::move()
     //  if peach has died
     if(m_peach->checkifAlive() == false){
         playSound(SOUND_PLAYER_DIE);
+        decLives();
         return GWSTATUS_PLAYER_DIED;
     }
     
@@ -318,6 +327,7 @@ int StudentWorld::move()
     if(startedGame && stage_complete){
         increaseScore(1000);
         playSound(SOUND_FINISHED_LEVEL);
+        levels++;
         return GWSTATUS_FINISHED_LEVEL;
     }
     stage_complete = false;
@@ -371,10 +381,11 @@ void StudentWorld::cleanUp()
     delete m_peach;
     m_peach = nullptr;
     
+if(levels!=2){
     delete m_flag;
     m_flag = nullptr;
-    
-  
+    }
+//    delete m_mario;
     m_mario = nullptr;
 }
 

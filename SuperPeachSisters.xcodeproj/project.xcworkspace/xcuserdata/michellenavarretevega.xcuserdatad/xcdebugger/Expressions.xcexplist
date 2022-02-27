@@ -3,12 +3,23 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "Piranha::doSomething():Actor.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "getDirection()">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "Peach::doSomething():Actor.cpp">
          <PersistentStrings>
             <PersistentString
                value = "getX()">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "Peach::bonk(Actor*):Actor.cpp">
       </ContextState>
    </ContextStates>
 </VariablesViewState>
