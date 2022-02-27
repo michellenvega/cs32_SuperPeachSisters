@@ -83,6 +83,14 @@ bool StudentWorld::addMushroom(int x, int y){
 // // // // // // // // // // // // // // //
 
 
+bool StudentWorld::isEmpty(double x, double y) { 
+    for (auto a : actors)
+        if (a->checkifAlive())
+            if (overlap(x, y, a->getX(), a->getY()))
+                return false;
+    return true;
+}
+
 int StudentWorld::getPeachTargetingInfo(Actor* a) const{
     int y1 = a->getY();
     int y2 = m_peach->getY();

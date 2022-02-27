@@ -107,6 +107,9 @@ public:
     //  has started game
     bool startedGame = false;
     
+    //  is this spot empty?
+    bool isEmpty(double x, double y) ;
+    
     // overlap
     bool overlap(int x1, int y1, int x2, int y2);
 
