@@ -678,33 +678,32 @@ void Piranha::damage(){
 void Peach::doSomething(){
     if(!checkifAlive()) return;
     
-/*  if(p_star == true)   // if has star power
-      ticks--;    // decrement the number of remaining game ticks before she loses this invincibility power
-    if(ticks == 0) // when tick reaches 0
-        p_star = false;   // set star power as off
-      */
+  if(p_invincible == true)   // if has star power
+      i_ticks--;    // decrement the number of remaining game ticks before she loses this invincibility power
+    if(i_ticks == 0) // when tick reaches 0
+        p_invincible = false;   // set star power as off
+      
     
     
-    if((p_jump || p_shoot) && !p_invincible && getWorld()->overlapWithEnemy(this)){ // if have jump/shoot power and overlap with enemy
+    if((p_jump || p_shoot) && !p_invincible && getWorld()->overlapWithEnemy(this)){
+        // if have jump/shoot power and overlap with enemy
         p_jump = false;
         p_shoot = false;}
     
-    /*
-    if(p_invincible)// if has temp invincibility
-        temp_ticks--;      //  decrement the number of remaining game ticks before she loses temporary invincibility
-    if(temp_ticks == 0) // when tick reaches 0
-        p_invincible = false;   // set temp invinc to false (need bool then)
+    
+    if(p_temp)// if has temp invincibility
+        i_ticks--;      //  decrement the number of remaining game ticks before she loses temporary invincibility
+    if(i_ticks == 0) // when tick reaches 0
+     p_temp = false;   // set temp invinc to false (need bool then)
         
     
-  */
+  
     
     // check if in recharge mode
-        // time_to_recharge_before_next_fire ticks is greater than zero
-                // must decrement this tick count by one
-                //if tick count == 0 and peach has shoot power
-                    // can NOW shoot a fireball
-    
-    
+    if(time_to_recharge_before_next_fire>0)    // time_to_recharge_before_next_fire ticks is greater than zero
+            time_to_recharge_before_next_fire--;    // must decrement this tick count by one
+    if(time_to_recharge_before_next_fire==0) //if tick count == 0 and peach has shoot power
+        p_shoot = true; // can NOW shoot a fireball
     
     
     if(getWorld()->overlapThenBonk(this))  //  if overlap with another object, must bonk another object

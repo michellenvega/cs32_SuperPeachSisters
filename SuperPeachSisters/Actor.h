@@ -283,7 +283,7 @@ public:
 private:
     //  damage and health
     double m_hitpoints; double m_damage;
-    bool p_jump, p_shoot, p_invincible;
+    bool p_jump, p_shoot, p_invincible, p_temp;
     int i_ticks;
     int time_to_recharge_before_next_fire = 0;
     // for use of jumping and movement
