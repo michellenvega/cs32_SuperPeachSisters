@@ -3,6 +3,16 @@
 
 // Students:  Add code to this file, Actor.h, StudentWorld.h, and StudentWorld.cpp
 
+// // // // // // // // // // // // // // //
+//    GOODIES AND BLOCK IMPLEMENTATIONS
+// // // // // // // // // // // // // // //
+
+
+// // // // //
+// MUSHROOM
+// // // // //
+
+
 void Mushroom::doSomething(){
     if(!isVisible()) return;
     if(getWorld()->overlapsPeach(this)){ // Mushroom object must see if it currently overlaps with Peach.
@@ -72,6 +82,11 @@ void Mushroom::doSomething(){
     else       moveTo(getX()-2, getY());
     
    }
+
+
+// // // // //
+//  FLOWER
+// // // // //
 
 
 void Flower::doSomething(){
@@ -145,6 +160,12 @@ void Flower::doSomething(){
     
 }
 
+
+// // // // //
+//   STAR
+// // // // //
+
+
 void Star::doSomething(){
     if(!isVisible()) return;
     if(getWorld()->overlapsPeach(this)){ // Star object must see if it currently overlaps with Peach.
@@ -215,13 +236,17 @@ void Star::doSomething(){
 
 
 
-void Block::bonk(){
+// // // // //
+//  BLOCK
+// // // // //
+
+
+void Block::bonk(Actor* bonker){
     if(typeG == "none"){
         getWorld()->playSound(SOUND_PLAYER_BONK);
         return;
     }
 
- //  getWorld()->playSound(SOUND_POWERUP_APPEARS);
     
     /*  Introduce a goodie object of the appropriate type (Flower, Star or
      Mushroom) exactly 8 pixels above the block that was bonked (the
@@ -247,12 +272,22 @@ void Block::bonk(){
 }
 
 
+
+// // // // // // // // // // // // // // //
+//      ENEMIES IMPLEMENTATIONS
+// // // // // // // // // // // // // // //
+
+
+// // // // //
+//   KOOPA
+// // // // //
+
 void Koopa::doSomething(){
     if(!checkifAlive()) return; //      if dead, return
     
     if(getWorld()->overlapsPeach(this))//  check to see if it overlaps with Peach at its current location
     {   // if so
-        getWorld()->bonkPeach();    //      The Koopa will attempt to bonk Peach
+        getWorld()->bonkPeach(this);    //      The Koopa will attempt to bonk Peach
         return;     //      The Koopa will immediately return
     }
     
@@ -262,7 +297,7 @@ void Koopa::doSomething(){
     int testX = getX(); int testY = getY();
     int d = getDirection();
     if(d == 180) {
-        if(getWorld()->blockThenBonk(testX-1-SPRITE_WIDTH, testY, this, false) || getWorld()->checkPos(testX-1-SPRITE_WIDTH,testY-1,this)){
+        if(getWorld()->blockThenBonk(testX-1-SPRITE_WIDTH, testY, this, false) || getWorld()->checkPos(testX-1-SPRITE_WIDTH,testY-1,this) || getWorld()->blockThenBonk(testX-1-SPRITE_WIDTH/2, testY, this, false)){
             d = 0;
         setDirection(d);
         return;
@@ -279,17 +314,24 @@ void Koopa::doSomething(){
     // Otherwise, the Koopa will update its location 1 pixel leftward or rightward depending on the direction it’s facing
     if(d==0 )    moveTo(getX()+1, getY());
         else       moveTo(getX()-1, getY());
-    
+}
 
+
+
+void Koopa::bonk(Actor* bonker){
     
     
 }
+
+// // // // //
+//  GOOMBA
+// // // // //
 
 void Goomba::doSomething(){
     if(!checkifAlive()) return; //      if dead, return
     if(getWorld()->overlapsPeach(this))//  check to see if it overlaps with Peach at its current location
     {   // if so
-        getWorld()->bonkPeach();    //      The Koopa will attempt to bonk Peach
+        getWorld()->bonkPeach(this);    //      The Koopa will attempt to bonk Peach
         return;     //      The Koopa will immediately return
     }
     
@@ -322,6 +364,23 @@ void Goomba::doSomething(){
     
 }
 
+// // // // //
+//  PIRANHA
+// // // // //
+
+
+
+
+
+
+
+// // // // // // // // // // // // // // //
+//         PEACH IMPLEMENTATIONS
+// // // // // // // // // // // // // // //
+
+
+
+
 void Peach::doSomething(){
     if(!checkifAlive()) return;
     
@@ -330,19 +389,20 @@ void Peach::doSomething(){
     if(star_ticks == 0) // when tick reaches 0
         p_star = false;   // set star power as off
        
+    */
     
+    if((p_jump || p_shoot) && !p_invincible && getWorld()->overlapWithEnemy(this)){ // if have jump/shoot power and overlap with enemy
+        p_jump = false;
+        p_shoot = false;}
     
-    if((p_jump || p_shoot) && !p_star && getWorld()->overlapWithEnemy(this)){ // if have jump/shoot power and overlap with enemy
-        p_jump = false; p_shoot = false;}
-    
-    
+    /*
     if(p_invincible)// if has temp invincibility
         temp_ticks--;      //  decrement the number of remaining game ticks before she loses temporary invincibility
     if(temp_ticks == 0) // when tick reaches 0
         p_invincible = false;   // set temp invinc to false (need bool then)
         
     
-    */
+  */
     
     // check if in recharge mode
         // time_to_recharge_before_next_fire ticks is greater than zero

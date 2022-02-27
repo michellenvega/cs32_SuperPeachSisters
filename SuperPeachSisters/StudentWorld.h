@@ -42,8 +42,8 @@ public:
     bool addPeachFireball(int x, int y);
     bool addPiranhaFireball(int x, int y);
     
-    void bonkPeach(){
-        m_peach->bonk();
+    void bonkPeach(Actor* bonker){
+        m_peach->bonk(bonker);
     }
     // if Peach overlaps, bonk the second actor
     bool overlapThenBonk(Actor* a1);

@@ -6,7 +6,15 @@
 class StudentWorld;
 using namespace std;
 #include <string>
-//base class
+
+
+
+// // // // // // // // // // // // // // //
+//     ACTOR BASE CLASS DECLARATION
+// // // // // // // // // // // // // // //
+
+
+
 class Actor : public GraphObject{
 public:
     Actor(StudentWorld* world, int imageID, int startX, int startY, int startDirection, int depth): GraphObject(imageID,startX* SPRITE_WIDTH,startY * SPRITE_HEIGHT, startDirection, depth), isAlive(true), m_world(world){};
@@ -17,7 +25,7 @@ public:
     bool checkifAlive(){ return isAlive; }
     void die(){ isAlive = false;}
     virtual bool isEnemy(){return false;}
-    virtual void bonk() {return;}
+    virtual void bonk(Actor* bonker) {return;}
 private:
     bool isAlive;
     StudentWorld* m_world;
@@ -25,24 +33,33 @@ private:
 };
 
 
+
+// // // // // // // // // // // // // // //
+//      OVERLAPABLE DECLARATION
+// // // // // // // // // // // // // // //
+
 class Overlapable : public Actor {
  public:
     Overlapable(StudentWorld* world, int imageID, int x_level, int y_level, int depth, int startDirection = 0) :
             Actor(world, imageID, x_level, y_level, startDirection, depth) {};
     virtual void doSomething(){return;}
     virtual bool solidObject() {return false;}
-    virtual void bonk() {return;}
+    virtual void bonk(Actor* bonker) {return;}
  };
 
 
-// flag
+
+// // // // // // // // // // // // // // //
+//      END OF LEVEL DECLARATIONS
+// // // // // // // // // // // // // // //
+
+
 class Flag: public Overlapable{
     public:
     Flag(StudentWorld* world, int x_level, int y_level): Overlapable(world, IID_FLAG,  x_level, y_level, 1 , 0){};
     virtual void doSomething(){return;}
 };
 
-// Mario
 class Mario: public Overlapable{
     public:
     Mario(StudentWorld* world, int x_level, int y_level): Overlapable(world, IID_MARIO, x_level, y_level, 1 , 0){};
@@ -50,15 +67,19 @@ class Mario: public Overlapable{
 };
 
 
-// goodies are alive!!
+
+
+// // // // // // // // // // // // // // //
+//        GOODIES DECLARATIONS
+// // // // // // // // // // // // // // //
+
+
 
  class Goodie : public Overlapable {
  public:
      Goodie(StudentWorld* world, int imageID, int x_level, int y_level) :
         Overlapable(world, imageID, x_level, y_level, 1) {};
      virtual void doSomething(){return;}
- protected:
-     bool reachedOSTACLE = false;
  private:
      //virtual void giveGoodie() = 0 ;
  };
@@ -91,12 +112,17 @@ class Mario: public Overlapable{
  };
  
 
-// enemies
+// // // // // // // // // // // // // // //
+//       ENEMY DECLARATIONS
+// // // // // // // // // // // // // // //
+
+
+
 class Enemy : public Overlapable{
 public:
     Enemy(StudentWorld* world, int imageID, int x_level, int y_level) : Overlapable(world, imageID, x_level, y_level, 0, (randInt(1, 2)%2) ? 0 : 180){};
     virtual void doSomething(){return;}
-    virtual void bonk() {return;}
+   // virtual void bonk(Actor* bonker) {return;}
     virtual bool isEnemy(){return true;}
     virtual bool solidObject() {return false;}
 };
@@ -105,7 +131,7 @@ class Goomba : public Enemy{
 public:
     Goomba(StudentWorld* world, int x_level, int y_level)  : Enemy(world, IID_GOOMBA, x_level, y_level) {};
     virtual void doSomething();
-    virtual void bonk(){return;}
+    virtual void bonk(Actor* bonker){return;}
 };
 
 
@@ -113,7 +139,7 @@ class Koopa : public Enemy{
 public:
     Koopa(StudentWorld* world, int x_level, int y_level)  :  Enemy(world, IID_KOOPA, x_level, y_level){};
     virtual void doSomething();
-    virtual void bonk(){return;}
+    virtual void bonk(Actor* bonker);
 };
 
 
@@ -121,15 +147,18 @@ class Piranha : public Enemy{
 public:
     Piranha(StudentWorld* world, int x_level, int y_level) : Enemy(world, IID_PIRANHA, x_level, y_level){};
     virtual void doSomething(){return;}
-    virtual void bonk(){return;}
+    virtual void bonk(Actor* bonker){return;}
 private:
     int firingDelay();
 };
 
 
-// Overlapable(StudentWorld* world, int imageID, double x_level, double y_level, int depth, int startDirection = right)
 
-// projectiles
+// // // // // // // // // // // // // // //
+//      PROJECTILE DECLARATIONS
+// // // // // // // // // // // // // // //
+
+
 
 class Projectile : public Overlapable {
 public:
@@ -160,19 +189,26 @@ public:
 };
 
 
-// block
+
+
+// // // // // // // // // // // // // // //
+//      PIPE AND BLOCK DECLARATIONS
+// // // // // // // // // // // // // // //
+
+
+
 class Block: public Actor{
     public:
     Block(StudentWorld* world, int x_level, int y_level, string g = "star"): Actor(world, IID_BLOCK, x_level, y_level, 0 , 2),
                 typeG(g){};
     virtual void doSomething(){ return; }
-    virtual void bonk();
+    virtual void bonk(Actor* bonker);
     virtual bool solidObject(){return true;}
 private:
     string typeG;
 };
 
-// pipe
+
 class Pipe: public Actor{
     public:
     Pipe(StudentWorld* world, int x_level, int y_level): Actor(world, IID_PIPE, x_level, y_level, 0 , 2){};
@@ -181,7 +217,16 @@ class Pipe: public Actor{
 };
 
 
-//peach
+
+
+// // // // // // // // // // // // // // //
+//           PEACH DECLARATIONS
+// // // // // // // // // // // // // // //
+
+
+
+
+
 class Peach: public Actor{ // check name
 public:
     Peach(StudentWorld* world, int x_level, int y_level): Actor(world, IID_PEACH, x_level, y_level, 0 , 0), m_hitpoints(1), p_jump(false), p_shoot(false), p_invincible(false){};
@@ -230,13 +275,6 @@ private:
     int remaining_jump_distance = 0;
 };
 
-
-
-
-
-// multiply by sprite width and height
-// check each bonk
-// check each size, direction, depth
 
 
 

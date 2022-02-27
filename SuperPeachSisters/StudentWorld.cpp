@@ -80,7 +80,7 @@ bool StudentWorld::overlapThenBonk(Actor* a1){
     for (auto a : actors)
         if (a != a1)
             if (a->checkifAlive() && overlap(a1->getX(),a1->getY(), a->getX(), a->getY())){
-                a->bonk();
+                a->bonk(a1);
                 return true;
             }
     return false;
@@ -103,7 +103,7 @@ bool StudentWorld::blockThenBonk(int x, int y, Actor* a1, bool bonk) {
                     if (x + SPRITE_WIDTH > a->getX() && x < a->getX() + SPRITE_WIDTH)
                         if (y + SPRITE_HEIGHT > a->getY() && y < a->getY() + SPRITE_HEIGHT){
                             if(bonk)
-                                a->bonk();
+                                a->bonk(a1);
                             return true;
                             
                         }
