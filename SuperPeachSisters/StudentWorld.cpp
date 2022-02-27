@@ -17,6 +17,38 @@ StudentWorld::StudentWorld(string assetPath): GameWorld(assetPath)
     actors.clear();
 }
 
+
+// // // // // // // // // // // // // // //
+//           ADDING TO WORLD
+// // // // // // // // // // // // // // //
+
+
+void StudentWorld::addPeachFireball(int x, int y, int dir){
+    PeachFireball *pf = new PeachFireball(this, x, y, dir);
+    actors.push_back(pf);
+    pf->setDirection(dir);
+    pf->moveTo(x,y);
+    pf->setVisible(true);
+}
+
+void StudentWorld::addPiranhaFireball(int x, int y, int dir){
+    PiranhaFireball *pf = new PiranhaFireball(this, x, y, dir);
+    actors.push_back(pf);
+    pf->setDirection(dir);
+    pf->moveTo(x,y);
+    pf->setVisible(true);
+}
+
+bool StudentWorld::addShell(int x, int y, int dir){
+    Shell *s = new Shell(this, x, y, dir);
+    actors.push_back(s);
+    s->setDirection(dir);
+    s->moveTo(x,y);
+    s->setVisible(true);
+    return true;
+}
+
+
 bool StudentWorld::addFlower(int x, int y){
     for(auto a : actors){
         if (a->getX() == x && a->getY() == y && !a->solidObject()){
@@ -45,13 +77,43 @@ bool StudentWorld::addMushroom(int x, int y){
         }}
     return false;
 }
-   
+
+
+// // // // // // // // // // // // // // //
+//            POSITION RELATED
+// // // // // // // // // // // // // // //
+
+
 int StudentWorld::getPeachTargetingInfo(Actor* a) const{
     int y1 = a->getY();
     int y2 = m_peach->getY();
     if (y1 + SPRITE_HEIGHT > y2 && y1 < y2 + SPRITE_HEIGHT)
         return m_peach->getX() - a->getX();
     return 0;
+}
+
+
+bool StudentWorld::checkPosBelow(int a, int b){
+    std::vector<Actor*>::iterator it;
+        for(it = actors.begin(); it!=actors.end();it++){
+                        if ((*it)->getX() == a && (*it)->getY() == b - 1)
+                            return true;
+            
+        }
+        return false;
+}
+
+bool StudentWorld::checkPos(int a, int b, Actor* act){
+    
+    for (auto c : actors){
+        if (c != act) //
+            if (c->checkifAlive() && c->solidObject())
+                if (overlap(a, b, c->getX(), c->getY()))
+                    return false;
+
+    }
+        return true;
+
 }
 bool StudentWorld::overlap(int x1, int y1, int x2, int y2){
     
@@ -110,6 +172,35 @@ bool StudentWorld::blockThenBonk(int x, int y, Actor* a1, bool bonk) {
     return false;
 
 }
+
+// // // // // // // // // // // // // // //
+//      PEACH IMPLEMENTATIONS
+// // // // // // // // // // // // // // //
+
+// Grant Peach invincibility for this number of ticks.
+void StudentWorld::grantInvincibility(int ticks) const{
+    m_peach->gainInvincibility(ticks);
+}
+
+// Grant Peach Shoot Power.
+void StudentWorld::grantShootPower() const{
+    m_peach->gainShootPower();
+}
+
+// Grant Peach Jump Power.
+void StudentWorld::grantJumpPower() const{
+    m_peach->gainJumpPower();
+}
+
+
+
+
+
+// // // // // // // // // // // // // // //
+//      STANDARD IMPLEMENTATIONS
+// // // // // // // // // // // // // // //
+
+
 
 int StudentWorld::init()
 {
@@ -259,27 +350,3 @@ StudentWorld::~StudentWorld(){
     cleanUp();
 }
  
-
-
-bool StudentWorld::checkPosBelow(int a, int b){
-    std::vector<Actor*>::iterator it;
-        for(it = actors.begin(); it!=actors.end();it++){
-                        if ((*it)->getX() == a && (*it)->getY() == b - 1)
-                            return true;
-            
-        }
-        return false;
-}
-
-bool StudentWorld::checkPos(int a, int b, Actor* act){
-    
-    for (auto c : actors){
-        if (c != act) //
-            if (c->checkifAlive() && c->solidObject())
-                if (overlap(a, b, c->getX(), c->getY()))
-                    return false;
-
-    }
-        return true;
-
-}

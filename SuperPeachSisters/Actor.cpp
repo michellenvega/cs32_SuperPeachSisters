@@ -271,6 +271,81 @@ void Block::bonk(Actor* bonker){
     
 }
 
+// // // // // // // // // // // // // // //
+//     PROJECTILES IMPLEMENTATIONS
+// // // // // // // // // // // // // // //
+
+
+// // // // // // // //
+//   PEACH FIREBALL
+// // // // // // // //
+
+void PeachFireball::doSomething(){
+    
+    // // // // //
+    // DAMAGES!!!
+    // // // // //
+    
+    
+    // coming soon
+    
+    
+    // // // // //
+    // next
+    // // // // //
+    
+    // Peach Fireball object must determine if there is an object just beneath
+    // it that would block it from falling two pixels downward
+    
+    int x2 = getX(); int y2 = getY();
+    if(getWorld()->checkPos(x2,y2,this)) {
+        y2--;
+        if(getWorld()->checkPos(x2,y2,this)) {
+                    y2--;
+                    moveTo(x2,y2);  //  Use the moveTo() method to move downward 2 pixels
+                }
+            }
+        
+   
+    int testX = getX(); int testY = getY();
+    
+
+    // The fireball will calculate a target x,y position first (2 pixels greater or  less than its current x position)
+    //  Check to see if there is an object that would block movement to this destination position
+    //  The Star will reverse its direction (from 0 to 180, or vice versa)
+    int d = getDirection();
+    if(d == 180) {
+        if(getWorld()->blockThenBonk(testX-2, testY, this, false) && getWorld()->blockThenBonk(testX-1, testY, this, false)){
+            d = 0;
+        setDirection(d);
+        return;
+        }
+    }
+    else{
+        if(getWorld()->blockThenBonk(testX+2, testY, this, false) && getWorld()->blockThenBonk(testX+1, testY, this, false)){
+        d = 180;
+        setDirection(d);
+        return;
+        }
+    }
+
+    
+    // Otherwise, the Star will update its location 2 pixels leftward or rightward depending on the direction it’s facing.
+    if(d==0 )    moveTo(getX()+2, getY());
+    else       moveTo(getX()-2, getY());
+    
+    
+    
+    
+    
+}
+
+
+
+
+
+
+
 
 
 // // // // // // // // // // // // // // //
@@ -319,16 +394,46 @@ void Koopa::doSomething(){
 
 
 void Koopa::bonk(Actor* bonker){
+    if(bonker != getWorld()->getPeach()) return; // If the bonker is not Peach, then ignore the bonk
     
+    if(getWorld()->getPeach()->isInvincible())  //  If Peach has Star Power (invincibility)
+    {   // then...
+        
+        getWorld()->playSound(SOUND_PLAYER_KICK); // Play the sound SOUND_PLAYER_KICK
+        
+        getWorld()->increaseScore(100); //  Increase the player’s score by 100 points
+        
+        die();  //  Will later be removed
+        
+        //  Introduce a new Shell object at the same location as Koopa, facing the same direction as Koopa
+        
+        getWorld()->addShell(getX(), getY(), getDirection());
+        
+    }
+     
     
 }
+    
+void Koopa::damage(){
+    //  (a fireball fired by Peach overlaps with her)
+    
+    getWorld()->increaseScore(100); //  Increase the player’s score by 100 points
+    
+    die();  // Set it to not alive
+    
+    //  Introduce a new Shell object at the same location as Koopa, facing the same direction as Koopa
+    getWorld()->addShell(getX(), getY(), getDirection());
+    
+    }
+
 
 // // // // //
 //  GOOMBA
 // // // // //
 
 void Goomba::doSomething(){
-    if(!checkifAlive()) return; //      if dead, return
+    if(!checkifAlive()) return; //     If not alive, return!
+    
     if(getWorld()->overlapsPeach(this))//  check to see if it overlaps with Peach at its current location
     {   // if so
         getWorld()->bonkPeach(this);    //      The Koopa will attempt to bonk Peach
@@ -364,15 +469,103 @@ void Goomba::doSomething(){
     
 }
 
-// // // // //
-//  PIRANHA
-// // // // //
+    
+void Goomba::bonk(Actor* bonker){
+    if(bonker != getWorld()->getPeach()) return; // If the bonker is not Peach, then ignore the bonk
+    
+    if(getWorld()->getPeach()->isInvincible())  //  If Peach has Star Power (invincibility)
+    {   // then...
+        
+        getWorld()->playSound(SOUND_PLAYER_KICK); // Play the sound SOUND_PLAYER_KICK
+        
+        getWorld()->increaseScore(100); //  Increase the player’s score by 100 points
+        
+        die();  //  Will later be removed
+        
+    }
+    }
+ 
+void Goomba::damage(){
+        
+    getWorld()->increaseScore(100); //  Increase the player’s score by 100 points
+    die(); //   Set it to not alive
+    }
+
+    
+// // // // // //
+//   PIRANHA
+// // // // // //
+    
+    
+void Piranha::doSomething(){
+    
+    if(!checkifAlive()) return; //  If not alive, return!
+    
+    increaseAnimationNumber();      // Cycle its sprite image using GraphObject’s increaseAnimationNumber() method
+    
+    if(getWorld()->overlapsPeach(this))//  Check to see if it overlaps with Peach at its current location
+    {   // if so
+        getWorld()->bonkPeach(this);    //      The Piranha will attempt to bonk Peach
+        return;     //      The Piranha will immediately return
+    }
+    
+    //  will assume total = 1.5*SPRITE_HEIGHT y coordinate
+    // greater than total but less than peach
+    // less than total but greater than peach
+    
+    if(!getWorld()->overlap(getX(), getY()+ 1.5*SPRITE_HEIGHT, getWorld()->getPeach()->getX(), getWorld()->getPeach()->getY()) && !getWorld()->overlap(getX(), getY()- 1.5*SPRITE_HEIGHT, getWorld()->getPeach()->getX(), getWorld()->getPeach()->getY())){
+        return; //   If not, Piranha will immediately return and do nothing else
+    }
+    
+    if(firingD != 0){   //  Piranha will check if it has a firing delay, and if so:
+        firingD--;          //  It will decrease the firing delay by one.
+        return;             //  It will immediately return.
+    }
+        
+    //  If there is no firing delay, then Piranha may choose to fire:
+    
+    int p_x = getWorld()->getPeach()->getX();   // Peach's x coord
+    
+    //  Compute distance between this and peach
+    
+    int difference;
+    if(p_x > getX()) difference = p_x - getX();
+    else difference = getX() - p_x;
+    
+    if(difference > 8*SPRITE_WIDTH) return; // NOT IN RANGE
+    
+    //  If in range, then...
+    
+    getWorld()->addPiranhaFireball(getX(), getY(), getDirection()); //  Add a new Piranha Fireball, same x, y, direction
+    
+    getWorld()->playSound(SOUND_PIRANHA_FIRE);  //  Play the sound SOUND_PIRANHA_FIRE
+    
+    firingD = 40;   //  Set its firing delay to 40
+    
+}
 
 
-
-
-
-
+void Piranha::bonk(Actor* bonker){
+    if(bonker != getWorld()->getPeach()) return; // If the bonker is not Peach, then ignore the bonk
+    
+    if(getWorld()->getPeach()->isInvincible())  //  If Peach has Star Power (invincibility)
+    {   // then...
+        
+        getWorld()->playSound(SOUND_PLAYER_KICK); // Play the sound SOUND_PLAYER_KICK
+        
+        getWorld()->increaseScore(100); //  Increase the player’s score by 100 points
+        
+        die();  //  Will later be removed
+        
+    }
+    }
+    
+void Piranha::damage(){
+    
+    getWorld()->increaseScore(100); //  Increase the player’s score by 100 points
+    die(); //   Set it to not alive
+    
+    }
 
 // // // // // // // // // // // // // // //
 //         PEACH IMPLEMENTATIONS
@@ -471,52 +664,56 @@ void Peach::doSomething(){
                 moveTo(getX()+4, getY());
             break;
         case KEY_PRESS_UP:
-            
-            // key up
-            /*i. Check to see if there is an object that would block movement one
-             pixel below her. (Such an object gives her support to jump; she
-             doesn't actually move downward.) If so:
-             1. Peach must set her remaining_jump_distance to the
-             appropriate value:
-             a. If Peach does NOT have Jump Power, then set
-             remaining_jump_distance to 8.
-             b. If Peach DOES have Jump Power, then set
-             remaining_jump_distance to 12.
-             2. Peach must play the sound SOUND_PLAYER_JUMP
-             using the playSound() method in the GameWorld class.*/
-            if(!getWorld()->checkPos(getX(), getY()-1, this)){
+
+            if(!getWorld()->checkPos(getX(), getY()-1, this)){ // Check to see if there is an object that would block movement 1 pixel below her.
                 initiatedJump = true;
                 if(p_jump) remaining_jump_distance = 12;
-                else remaining_jump_distance = 12;
+                else remaining_jump_distance = 8;
                 getWorld()->startedGame = true;
             getWorld()->playSound(SOUND_PLAYER_JUMP);
                 
             }
             break;
-        case KEY_PRESS_SPACE:
-            //  space bar:
-            /* i. If Peach doesn’t have Shoot Power, then do nothing
-             ii. Otherwise, if the time_to_recharge_before_next_fire is greater
-             than zero, then do nothing.
-             iii. Otherwise:
-             1. Play the sound SOUND_PLAYER_FIRE using the
-             playSound() method in the GameWorld class.
-             2. Set time_to_recharge_before_next_fire to 8, meaning that
-             Peach may not fire again for another 8 game ticks
-             3. Determine the x,y position directly in front of Peach that is
-             4 pixels away in the direction she’s facing.
-             4. Introduce a new fireball object at this location into your
-             StudentWorld. The fireball must have its direction set to the
-             same direction that Peach was facing when she fired.*/
-
+        case KEY_PRESS_SPACE:{
             
+            //  If Peach doesn’t have Shoot Power, then do nothing
+            //  If the time_to_recharge_before_next_fire is greater than zero, then do nothing
+            if(!p_shoot || time_to_recharge_before_next_fire > 0) break;
             
-            if(getWorld()->checkPos(getX(),getY()-4, this)) //check if blocked
-                moveTo(getX(), getY()-4);
-            break;
+            //  Otherwise:
+            
+            getWorld()->playSound(SOUND_PLAYER_FIRE);   //  Play the sound SOUND_PLAYER_FIRE
+            
+            time_to_recharge_before_next_fire = 8;  //  Set time_to_recharge_before_next_fire to 8
+            
+            //  Determine the x,y position directly in front of Peach that is 4 pixels away in the direction she’s facing.
+            int newX;    int dir = getDirection();
+            if(dir == 0) newX = getX() + 4;
+                else
+                newX =  getX() - 4;
+            
+            //  Introduce a new fireball object at new location, same direction as Peach
+            getWorld()->addPeachFireball(newX, getY(), dir);
+    
+            break;}
         default:
             break;
              
     }
     }
+}
+
+// Grant Peach invincibility for this number of ticks.
+void Peach::gainInvincibility(int ticks){
+    i_ticks = ticks;
+}
+
+// Grant Peach Shoot Power.
+void Peach::gainShootPower(){
+    p_shoot = true;
+}
+
+// Grant Peach Jump Power.
+void Peach::gainJumpPower(){
+    p_jump = true;
 }

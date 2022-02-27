@@ -23,24 +23,38 @@ public:
     void finishedLevel(){
         stage_complete = true;
     }
+    
+    
+    // // // // // // // //
+    // BEING USED
+    // // // // // // // //
+    
+    // goodies
+    bool addFlower(int x, int y);
+    bool addStar(int x, int y);
+    bool addMushroom(int x, int y);
+    // projectiles
+    bool addShell(int x, int y, int dir);
+    void addPeachFireball(int x, int y, int dir);
+    void addPiranhaFireball(int x, int y, int dir);
+    
+    
+    
+    
+    
+    
     // add actors to world
     bool addPeach(int x, int y);
     bool addMario(int x, int y);
     bool addBlock(int x, int y);
     bool addFlag(int x, int y);
     bool addPipe(int x, int y);
-    // goodies
-    bool addFlower(int x, int y);
-    bool addStar(int x, int y);
-    bool addMushroom(int x, int y);
+
     // enemies
     bool addGoomba(int x, int y);
     bool addKoopa(int x, int y, string direction);
     bool addPiranha(int x, int y);
-    // projectiles
-    bool addShell(int x, int y, string direction);
-    bool addPeachFireball(int x, int y);
-    bool addPiranhaFireball(int x, int y);
+    
     
     void bonkPeach(Actor* bonker){
         m_peach->bonk(bonker);
@@ -70,13 +84,13 @@ public:
     void setPeachHP(int hp) const{return;}
     
     // Grant Peach invincibility for this number of ticks.
-    void grantInvincibility(int ticks) const{return;}
+    void grantInvincibility(int ticks) const;
     
     // Grant Peach Shoot Power.
-    void grantShootPower() const{return;}
+    void grantShootPower() const;
     
     // Grant Peach Jump Power.
-    void grantJumpPower() const{return;}
+    void grantJumpPower() const;
     
     // Return true if a overlaps an enemy; otherwise, return false.
     bool overlapWithEnemy(Actor* primary);
@@ -87,8 +101,14 @@ public:
     // if blocking position, set true
     bool isBlocked(int x, int y, Actor* a1) ;
     
+    //  Return main character
+    Peach* getPeach(){return m_peach;}
+    
     //  has started game
     bool startedGame = false;
+    
+    // overlap
+    bool overlap(int x1, int y1, int x2, int y2);
 
 private:
     Peach* m_peach;
@@ -96,7 +116,6 @@ private:
     Mario* m_mario;
     bool marioisHere = false;
     vector<Actor*> actors;
-    bool overlap(int x1, int y1, int x2, int y2);
     bool stage_complete = false;
 };
 

@@ -25,11 +25,40 @@ public:
     bool checkifAlive(){ return isAlive; }
     void die(){ isAlive = false;}
     virtual bool isEnemy(){return false;}
+    virtual bool isDamageable(){return false;}
+    virtual void damage(){return;}
     virtual void bonk(Actor* bonker) {return;}
 private:
     bool isAlive;
     StudentWorld* m_world;
   
+};
+
+
+// // // // // // // // // // // // // // //
+//      PIPE AND BLOCK DECLARATIONS
+// // // // // // // // // // // // // // //
+
+
+
+class Block: public Actor{
+    public:
+    Block(StudentWorld* world, int x_level, int y_level, string g = "star"): Actor(world, IID_BLOCK, x_level, y_level, 0 , 2),
+                typeG(g){};
+    virtual void doSomething(){ return; }
+    virtual void bonk(Actor* bonker);
+    virtual bool solidObject(){return true;}
+    
+private:
+    string typeG;
+};
+
+
+class Pipe: public Actor{
+    public:
+    Pipe(StudentWorld* world, int x_level, int y_level): Actor(world, IID_PIPE, x_level, y_level, 0 , 2){};
+    virtual void doSomething(){return;}
+    virtual bool solidObject(){return true;}
 };
 
 
@@ -45,6 +74,8 @@ class Overlapable : public Actor {
     virtual void doSomething(){return;}
     virtual bool solidObject() {return false;}
     virtual void bonk(Actor* bonker) {return;}
+    virtual bool isDamageable(){return false;}
+    virtual void damage(){return;}
  };
 
 
@@ -80,9 +111,20 @@ class Mario: public Overlapable{
      Goodie(StudentWorld* world, int imageID, int x_level, int y_level) :
         Overlapable(world, imageID, x_level, y_level, 1) {};
      virtual void doSomething(){return;}
+     virtual bool isDamageable(){return false;}
+     virtual void damage(){return;}
  private:
      //virtual void giveGoodie() = 0 ;
  };
+
+class Flower : public Goodie {
+public:
+Flower(StudentWorld* world, int x_level, int y_level) :
+        Goodie(world, IID_FLOWER, x_level, y_level) {};
+    virtual void doSomething();
+private:
+   // virtual void giveGoodie();
+};
 
  class Star : public Goodie {
  public:
@@ -91,15 +133,6 @@ class Mario: public Overlapable{
      virtual void doSomething();
  private:
 
- };
-
- class Flower : public Goodie {
- public:
- Flower(StudentWorld* world, int x_level, int y_level) :
-         Goodie(world, IID_FLOWER, x_level, y_level) {};
-     virtual void doSomething();
- private:
-    // virtual void giveGoodie();
  };
  
  class Mushroom : public Goodie {
@@ -112,47 +145,6 @@ class Mario: public Overlapable{
  };
  
 
-// // // // // // // // // // // // // // //
-//       ENEMY DECLARATIONS
-// // // // // // // // // // // // // // //
-
-
-
-class Enemy : public Overlapable{
-public:
-    Enemy(StudentWorld* world, int imageID, int x_level, int y_level) : Overlapable(world, imageID, x_level, y_level, 0, (randInt(1, 2)%2) ? 0 : 180){};
-    virtual void doSomething(){return;}
-   // virtual void bonk(Actor* bonker) {return;}
-    virtual bool isEnemy(){return true;}
-    virtual bool solidObject() {return false;}
-};
-
-class Goomba : public Enemy{
-public:
-    Goomba(StudentWorld* world, int x_level, int y_level)  : Enemy(world, IID_GOOMBA, x_level, y_level) {};
-    virtual void doSomething();
-    virtual void bonk(Actor* bonker){return;}
-};
-
-
-class Koopa : public Enemy{
-public:
-    Koopa(StudentWorld* world, int x_level, int y_level)  :  Enemy(world, IID_KOOPA, x_level, y_level){};
-    virtual void doSomething();
-    virtual void bonk(Actor* bonker);
-};
-
-
-class Piranha : public Enemy{
-public:
-    Piranha(StudentWorld* world, int x_level, int y_level) : Enemy(world, IID_PIRANHA, x_level, y_level){};
-    virtual void doSomething(){return;}
-    virtual void bonk(Actor* bonker){return;}
-private:
-    int firingDelay();
-};
-
-
 
 // // // // // // // // // // // // // // //
 //      PROJECTILE DECLARATIONS
@@ -164,14 +156,16 @@ class Projectile : public Overlapable {
 public:
     Projectile(StudentWorld* world, int imageID, int x_level, int y_level, int direction) :
        Overlapable(world, imageID, x_level, y_level, 1) {};
-    virtual void doSomething();
+    virtual void doSomething(){return;}
+    virtual bool isDamageable(){return false;}
+    virtual void damage(){return;}
 };
 
 class Shell : public Projectile {
 public:
     Shell(StudentWorld* world, int x_level, int y_level, int dir) :
         Projectile(world, IID_SHELL, x_level, y_level, dir) {};
-    virtual void doSomething();
+    virtual void doSomething(){return;}
 };
 
 class PeachFireball : public Projectile {
@@ -185,37 +179,59 @@ class PiranhaFireball : public Projectile {
 public:
     PiranhaFireball(StudentWorld* world, int x_level, int y_level, int dir) :
         Projectile(world, IID_PIRANHA_FIRE, x_level, y_level, dir)  {};
-    virtual void doSomething();
-};
-
-
-
-
-// // // // // // // // // // // // // // //
-//      PIPE AND BLOCK DECLARATIONS
-// // // // // // // // // // // // // // //
-
-
-
-class Block: public Actor{
-    public:
-    Block(StudentWorld* world, int x_level, int y_level, string g = "star"): Actor(world, IID_BLOCK, x_level, y_level, 0 , 2),
-                typeG(g){};
-    virtual void doSomething(){ return; }
-    virtual void bonk(Actor* bonker);
-    virtual bool solidObject(){return true;}
-private:
-    string typeG;
-};
-
-
-class Pipe: public Actor{
-    public:
-    Pipe(StudentWorld* world, int x_level, int y_level): Actor(world, IID_PIPE, x_level, y_level, 0 , 2){};
     virtual void doSomething(){return;}
-    virtual bool solidObject(){return true;}
 };
 
+
+
+// // // // // // // // // // // // // // //
+//       ENEMY DECLARATIONS
+// // // // // // // // // // // // // // //
+
+
+
+class Enemy : public Overlapable{
+public:
+    Enemy(StudentWorld* world, int imageID, int x_level, int y_level) : Overlapable(world, imageID, x_level, y_level, 0, (randInt(1, 2)%2) ? 0 : 180){};
+    
+    virtual void doSomething(){return;}
+    virtual bool isEnemy(){return true;}
+    virtual bool solidObject() {return false;}
+    virtual bool isDamageable(){return true;}
+private:
+    virtual void damage(){return;}
+};
+
+class Goomba : public Enemy{
+public:
+    Goomba(StudentWorld* world, int x_level, int y_level)  : Enemy(world, IID_GOOMBA, x_level, y_level) {};
+    virtual void doSomething();
+    virtual void bonk(Actor* bonker);
+private:
+    virtual void damage();
+};
+
+
+class Koopa : public Enemy{
+public:
+    Koopa(StudentWorld* world, int x_level, int y_level)  :  Enemy(world, IID_KOOPA, x_level, y_level){};
+    virtual void doSomething();
+    virtual void bonk(Actor* bonker);
+private:
+    virtual void damage();
+};
+
+
+class Piranha : public Enemy{
+public:
+    Piranha(StudentWorld* world, int x_level, int y_level) : Enemy(world, IID_PIRANHA, x_level, y_level), firingD(0){};
+    virtual void doSomething();
+    virtual void bonk(Actor* bonker);
+private:
+    int firingDelay();
+    int firingD;
+    virtual void damage();
+};
 
 
 
@@ -223,6 +239,7 @@ class Pipe: public Actor{
 //           PEACH DECLARATIONS
 // // // // // // // // // // // // // // //
 
+// DELETING DEAD CHARACTERS!!!!
 
 
 
@@ -230,46 +247,46 @@ class Pipe: public Actor{
 class Peach: public Actor{ // check name
 public:
     Peach(StudentWorld* world, int x_level, int y_level): Actor(world, IID_PEACH, x_level, y_level, 0 , 0), m_hitpoints(1), p_jump(false), p_shoot(false), p_invincible(false){};
-    
+
+    //  Basic qualities of Peach
     virtual void doSomething();
     virtual bool solidObject(){return true;}
-    
-    // get whether Peach has the power or not
-    bool hasJumpPower(){return p_jump;}
-    bool hasShootPower(){return p_shoot;}
-    bool hasInvinPower(){return p_invincible;} // temporary
-   
+    virtual bool isDamageable(){return false;}
+    virtual void damage(){return;}
+
+    // Suffer damage.
     void sufferDamageIfDamageable();
-        
-          // Set Peach's hit points.
-        void setHP(int hp);
-        
-          // Grant Peach invincibility for this number of ticks.
-        void gainInvincibility(int ticks);
-        
-          // Grant Peach Shoot Power.
-        void gainShootPower();
-
-          // Grant Peach Jump Power.
-        void gainJumpPower();
-        
-          // Is Peach invincible?
-        bool isInvincible() const;
-        
-          // Does Peach have Shoot Power?
-        bool hasShootPower() const;
-
-          // Does Peach have Jump Power?
-        bool hasJumpPower() const;
-
-  
+    
+    // Set Peach's hit points.
+    void setHP(int hp);
+    
+    // Grant Peach invincibility for this number of ticks.
+    void gainInvincibility(int ticks);
+    
+    // Grant Peach Shoot Power.
+    void gainShootPower();
+    
+    // Grant Peach Jump Power.
+    void gainJumpPower();
+    
+    // Is Peach invincible?
+    bool isInvincible() const{return p_invincible;}
+    
+    // Does Peach have Shoot Power?
+    bool hasShootPower() const{return p_shoot;}
+    
+    // Does Peach have Jump Power?
+    bool hasJumpPower() const{return p_jump;}
+    
+    
     
 private:
     //  damage and health
     double m_hitpoints; double m_damage;
     bool p_jump, p_shoot, p_invincible;
-    
-// for use of jumping and movement
+    int i_ticks;
+    int time_to_recharge_before_next_fire = 0;
+    // for use of jumping and movement
     bool initiatedJump = false;
     bool fallingJump = false;
     int remaining_jump_distance = 0;
