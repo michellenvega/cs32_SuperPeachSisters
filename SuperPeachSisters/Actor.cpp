@@ -369,7 +369,7 @@ void PiranhaFireball::doSomething(){
         return;     //  It will do nothing else and immediately return
     }
 
-    // Peach Fireball object must determine if there is an object just beneath
+    // Piranha Fireball object must determine if there is an object just beneath
     // it that would block it from falling two pixels downward
     
     int x2 = getX(); int y2 = getY();
@@ -406,9 +406,6 @@ void PiranhaFireball::doSomething(){
     // Otherwise, the Fireball will update its location 2 pixels leftward or rightward depending on the direction it’s facing.
     if(d==0 )    moveTo(getX()+2, getY());
     else       moveTo(getX()-2, getY());
-    
-    
-    
     
 }
 
@@ -491,7 +488,7 @@ void Koopa::doSomething(){
     int testX = getX(); int testY = getY();
     int d = getDirection();
     if(d == 180) {
-        if(getWorld()->blockThenBonk(testX-1, testY, this, false) || getWorld()->checkPos(testX-1-SPRITE_WIDTH,testY-1,this) || getWorld()->isEmpty(testX-1, testY-4)){
+        if(getWorld()->blockThenBonk(testX-1, testY, this, false) || getWorld()->checkPos(testX-1-SPRITE_WIDTH,testY-1,this) || getWorld()->checkPos(testX-1,testY-1,this) || getWorld()->isEmpty(testX-1, testY-4)){
             d = 0;
         setDirection(d);
         return;
@@ -507,7 +504,8 @@ void Koopa::doSomething(){
     }
     // Otherwise, the Koopa will update its location 1 pixel leftward or rightward depending on the direction it’s facing
     if(d==0 )    moveTo(getX()+1, getY());
-        else       moveTo(getX()-1, getY());
+        else
+            moveTo(getX()-1, getY());
 }
 
 
@@ -555,8 +553,8 @@ void Goomba::doSomething(){
     
     if(getWorld()->overlapsPeach(this))//  check to see if it overlaps with Peach at its current location
     {   // if so
-        getWorld()->bonkPeach(this);    //      The Koopa will attempt to bonk Peach
-        return;     //      The Koopa will immediately return
+        getWorld()->bonkPeach(this);    //      The Goomba will attempt to bonk Peach
+        return;     //      The Goomba will immediately return
     }
     
     //      Determine if it can move 1 pixel in its current direction without running into an object that blocks movement
@@ -566,20 +564,20 @@ void Goomba::doSomething(){
     int d = getDirection();
     
     if(d == 180) {
-        if(getWorld()->blockThenBonk(testX-1, testY, this, false) || getWorld()->blockThenBonk(testX-1, testY-1, this, false)){
+        if(getWorld()->blockThenBonk(testX-1, testY, this, false) || getWorld()->blockThenBonk(testX-1, testY-1, this, false) || getWorld()->isEmpty(testX-1, testY-4)){
         setDirection(0);
         return;
         }
     }
     else{
-        if(getWorld()->blockThenBonk(testX+1, testY, this, false) || getWorld()->blockThenBonk(testX+1, testY-1, this, false)){
+        if(getWorld()->blockThenBonk(testX+1, testY, this, false) || getWorld()->blockThenBonk(testX+1, testY-1, this, false) || getWorld()->isEmpty(testX+1, testY-4)){
         setDirection(180);
         return;
         }
     }
     
     d = getDirection();
-    // Otherwise, the Koopa will update its location 1 pixel leftward or rightward depending on the direction it’s facing
+    // Otherwise, the Goomba will update its location 1 pixel leftward or rightward depending on the direction it’s facing
     if(d==0 )    moveTo(getX()+1, getY());
     else       moveTo(getX()-1, getY());
     
@@ -661,7 +659,7 @@ void Piranha::doSomething(){
         else
         setDirection(0);
     
-   getWorld()->addPiranhaFireball(getX()-8, getY(), getDirection()); //  Add a new Piranha Fireball, same x, y, direction
+    getWorld()->addPiranhaFireball(getX()-8, getY(), getDirection()); //  Add a new Piranha Fireball, same x, y, direction
     
     getWorld()->playSound(SOUND_PIRANHA_FIRE);  //  Play the sound SOUND_PIRANHA_FIRE
     
@@ -709,7 +707,7 @@ void Peach::bonk(Actor* bonker){
     
     addHP(-1);      //  Decrement Peach’s hit points by one
     
-    p_invincible = true;
+    p_temp = true;
     i_ticks = 10;   //  Set Peach’s temporary invincibility to 10 ticks
     
     if(p_shoot) p_shoot = false;    //  If Peach had Shoot Power, turn it off

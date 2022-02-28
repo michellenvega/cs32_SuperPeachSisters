@@ -299,6 +299,7 @@ int StudentWorld::init()
                 case Level::mario:
                     m_flag = new EndLevel(this, x, y, IID_MARIO);
                     marioisHere = true;
+                    wonGame = true;
                     break;
             }
             }}
@@ -310,6 +311,7 @@ int StudentWorld::init()
 int StudentWorld::move()
 {
     m_peach->doSomething();
+    m_flag->doSomething();
     for (auto it = actors.begin(); it != actors.end(); it++) {
         if ((*it)->checkifAlive()) {
             (*it)->doSomething();
@@ -331,7 +333,7 @@ int StudentWorld::move()
      */
     stage_complete = overlapsPeach(m_flag);
     
-    if(startedGame && stage_complete){
+    if(startedGame && stage_complete && !wonGame){
         increaseScore(1000);
         playSound(SOUND_FINISHED_LEVEL);
         levels++;
@@ -339,6 +341,7 @@ int StudentWorld::move()
     }
     stage_complete = false;
     // overlaps with mario
+    
     /*If Peach has reached Mario (overlaps with him), then the player has won and the
      game is over. In this case, the move() method must:
      a. Play a SOUND_GAME_OVER sound using playSound().
