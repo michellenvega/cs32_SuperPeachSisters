@@ -49,7 +49,7 @@ static const double FONT_SCALEDOWN = 760.0;
 static const double SCORE_Y = 3.8;
 static const double SCORE_Z = -10;
 
-static const int MS_PER_FRAME = 5;
+static const int MS_PER_FRAME = 2;
 
 int GameController::m_ms_per_tick = kDefaultMsPerTick;
 
@@ -59,6 +59,7 @@ struct SpriteInfo
 	int frameNum;
 	std::string	 tgaFileName;
 };
+
 
 static void convertToGlutCoords(double x, double y, double& gx, double& gy, double& gz);
 static void drawPrompt(string mainMessage, string secondMessage);

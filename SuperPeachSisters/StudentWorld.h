@@ -102,6 +102,9 @@ public:
     
     //  Signify we have won the game
     void wongame(bool done);
+    
+    //  Mario is here
+    bool marioinGame(){return marioisHere;}
 
 private:
     Peach* m_peach;

@@ -43,9 +43,9 @@ private:
 
 class Block: public Actor{
     public:
-    Block(StudentWorld* world, int x_level, int y_level, string g = "star"): Actor(world, IID_BLOCK, x_level, y_level, 0 , 2),
+    Block(StudentWorld* world, int x_level, int y_level, string g = "none"): Actor(world, IID_BLOCK, x_level, y_level, 0 , 2),
                 typeG(g){};
-    virtual void doSomething(){ return; }
+    virtual void doSomething(){return;}
     virtual void bonk(Actor* bonker);
     virtual bool solidObject(){return true;}
     
@@ -73,9 +73,6 @@ class Overlapable : public Actor {
             Actor(world, imageID, x_level, y_level, startDirection, depth) {};
     virtual void doSomething(){return;}
     virtual bool solidObject() {return false;}
-    virtual void bonk(Actor* bonker) {return;}
-    virtual bool isDamageable(){return false;}
-    virtual void damage(){return;}
  };
 
 
@@ -103,10 +100,7 @@ class EndLevel: public Overlapable{
      Goodie(StudentWorld* world, int imageID, int x_level, int y_level) :
         Overlapable(world, imageID, x_level, y_level, 1) {};
      virtual void doSomething(){return;}
-     virtual bool isDamageable(){return false;}
-     virtual void damage(){return;}
- private:
-     //virtual void giveGoodie() = 0 ;
+
  };
 
 class Flower : public Goodie {
@@ -114,8 +108,7 @@ public:
 Flower(StudentWorld* world, int x_level, int y_level) :
         Goodie(world, IID_FLOWER, x_level, y_level) {};
     virtual void doSomething();
-private:
-   // virtual void giveGoodie();
+
 };
 
  class Star : public Goodie {
@@ -123,7 +116,6 @@ private:
     Star(StudentWorld* world, int x_level, int y_level) :
          Goodie(world, IID_STAR, x_level, y_level) {};
      virtual void doSomething();
- private:
 
  };
  
@@ -132,8 +124,7 @@ private:
     Mushroom(StudentWorld* world, int x_level, int y_level) :
          Goodie(world, IID_MUSHROOM, x_level, y_level) {};
      virtual void doSomething();
- private:
-    // virtual void giveGoodie();
+
  };
  
 

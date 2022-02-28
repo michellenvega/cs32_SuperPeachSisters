@@ -299,7 +299,6 @@ int StudentWorld::init()
                 case Level::mario:
                     m_flag = new EndLevel(this, x, y, IID_MARIO);
                     marioisHere = true;
-                    wonGame = true;
                     break;
             }
             }}

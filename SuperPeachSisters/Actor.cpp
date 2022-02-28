@@ -16,6 +16,7 @@
      
      if(getWorld()->overlapsPeach(this))    //  e Flag must see if it currently overlaps with Peach. If so:
      {
+         if(getWorld()->marioinGame()) getWorld()->wongame(true);
          getWorld()->increaseScore(1000);   //  It will increase the player’s score by 1000 points
          
          die();     //  It will immediately set its state to not-alive
@@ -478,7 +479,7 @@ void Koopa::doSomething(){
     
     if(getWorld()->overlapsPeach(this))//  check to see if it overlaps with Peach at its current location
     {   // if so
-        getWorld()->bonkPeach(this);    //      The Koopa will attempt to bonk Peach
+       // getWorld()->bonkPeach(this);    //      The Koopa will attempt to bonk Peach
         return;     //      The Koopa will immediately return
     }
     
@@ -659,7 +660,7 @@ void Piranha::doSomething(){
         else
         setDirection(0);
     
-    getWorld()->addPiranhaFireball(getX()-8, getY(), getDirection()); //  Add a new Piranha Fireball, same x, y, direction
+    //getWorld()->addPiranhaFireball(getX()-8, getY(), getDirection()); //  Add a new Piranha Fireball, same x, y, direction
     
     getWorld()->playSound(SOUND_PIRANHA_FIRE);  //  Play the sound SOUND_PIRANHA_FIRE
     
