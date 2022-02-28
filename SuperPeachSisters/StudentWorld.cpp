@@ -3,7 +3,6 @@
 #include <string>
 using namespace std;
 
-// hello
 GameWorld* createStudentWorld(string assetPath)
 {
     return new StudentWorld(assetPath);
@@ -14,6 +13,7 @@ GameWorld* createStudentWorld(string assetPath)
 StudentWorld::StudentWorld(string assetPath): GameWorld(assetPath)
 {
     m_peach = nullptr;
+    m_flag = nullptr;
     actors.clear();
 }
 
@@ -23,7 +23,7 @@ StudentWorld::StudentWorld(string assetPath): GameWorld(assetPath)
 // // // // // // // // // // // // // // //
 
 
-void StudentWorld::addPeachFireball(int x, int y, int dir){
+void StudentWorld::addPeachFireball(int x, int y, int dir) {
     PeachFireball *pf = new PeachFireball(this, x, y, dir);
     actors.push_back(pf);
     pf->setDirection(dir);
@@ -31,7 +31,7 @@ void StudentWorld::addPeachFireball(int x, int y, int dir){
     pf->setVisible(true);
 }
 
-void StudentWorld::addPiranhaFireball(int x, int y, int dir){
+void StudentWorld::addPiranhaFireball(int x, int y, int dir) {
     PiranhaFireball *pf = new PiranhaFireball(this, x, y, dir);
     actors.push_back(pf);
     pf->setDirection(dir);
@@ -39,7 +39,7 @@ void StudentWorld::addPiranhaFireball(int x, int y, int dir){
     pf->setVisible(true);
 }
 
-bool StudentWorld::addShell(int x, int y, int dir){
+bool StudentWorld::addShell(int x, int y, int dir) {
     Shell *s = new Shell(this, x, y, dir);
     actors.push_back(s);
     s->setDirection(dir);
@@ -49,7 +49,7 @@ bool StudentWorld::addShell(int x, int y, int dir){
 }
 
 
-bool StudentWorld::addFlower(int x, int y){
+bool StudentWorld::addFlower(int x, int y) const{
     for(auto a : actors){
         if (a->getX() == x && a->getY() == y && !a->solidObject()){
             a->setVisible(true);
@@ -59,7 +59,7 @@ bool StudentWorld::addFlower(int x, int y){
     return false;
 }
 
-bool StudentWorld::addStar(int x, int y){
+bool StudentWorld::addStar(int x, int y) const{
     for(auto a : actors){
         if (a->getX() == x && a->getY() == y && !a->solidObject()){
             a->setVisible(true);
@@ -68,7 +68,7 @@ bool StudentWorld::addStar(int x, int y){
         }}
     return false;
 }
-bool StudentWorld::addMushroom(int x, int y){
+bool StudentWorld::addMushroom(int x, int y) const {
     for(auto a : actors){
         if (a->getX() == x && a->getY() == y && !a->solidObject()){
             a->setVisible(true);
@@ -76,6 +76,10 @@ bool StudentWorld::addMushroom(int x, int y){
             return true;
         }}
     return false;
+}
+
+void StudentWorld::startTheGame(){
+    startedGame = true;
 }
 
 
@@ -84,7 +88,7 @@ bool StudentWorld::addMushroom(int x, int y){
 // // // // // // // // // // // // // // //
 
 
-bool StudentWorld::isEmpty(double x, double y) {
+bool StudentWorld::isEmpty(double x, double y) const {
     for (auto a : actors)
         if (a->checkifAlive())
             if (overlap(x, y, a->getX(), a->getY()))
@@ -97,17 +101,8 @@ int StudentWorld::getPeachTargetingInfo(Actor* a) const{
 }
 
 
-bool StudentWorld::checkPosBelow(int a, int b){
-    std::vector<Actor*>::iterator it;
-        for(it = actors.begin(); it!=actors.end();it++){
-                        if ((*it)->getX() == a && (*it)->getY() == b - 1)
-                            return true;
-            
-        }
-        return false;
-}
 
-bool StudentWorld::checkPos(int a, int b, Actor* act){
+bool StudentWorld::checkPos(int a, int b, Actor* act) const {
     
     for (auto c : actors){
         if (c != act) //
@@ -127,7 +122,7 @@ bool StudentWorld::overlap(int x1, int y1, int x2, int y2) const{
         return false;
 }
 
-bool StudentWorld::overlapWithEnemy(Actor* primary){
+bool StudentWorld::overlapWithEnemy(Actor* primary) const {
     for (auto a : actors)
         if (a != primary)
             if (a->checkifAlive() && a->isEnemy() && overlap(primary->getX(),primary->getY(), a->getX(), a->getY()))
@@ -135,14 +130,14 @@ bool StudentWorld::overlapWithEnemy(Actor* primary){
     return false;
 }
 
-bool StudentWorld::overlapsPeach(Actor* a) {
+bool StudentWorld::overlapsPeach(Actor* a) const{
     if (overlap(m_peach->getX(),m_peach->getY(), a->getX(), a->getY())){
         return true;
     }
     return false;
 }
 
-bool StudentWorld::overlapThenBonk(Actor* a1){
+bool StudentWorld::overlapThenBonk(Actor* a1) const{
     for (auto a : actors)
         if (a != a1)
             if (a->checkifAlive() && overlap(a1->getX(),a1->getY(), a->getX(), a->getY())){
@@ -152,7 +147,7 @@ bool StudentWorld::overlapThenBonk(Actor* a1){
     return false;
 
 }
-bool StudentWorld::isBlocked(int x, int y, Actor* a1) {
+bool StudentWorld::isBlocked(int x, int y, Actor* a1) const{
 
    bool doesit = overlap(x, y, a1->getX(), a1->getX());
     for (auto a : actors)
@@ -160,7 +155,7 @@ bool StudentWorld::isBlocked(int x, int y, Actor* a1) {
             return true;
     return false;
 }
-bool StudentWorld::blockThenBonk(int x, int y, Actor* a1, bool bonk) {
+bool StudentWorld::blockThenBonk(int x, int y, Actor* a1, bool bonk) const{
 
     y++;
     for (auto a : actors)
@@ -180,6 +175,9 @@ bool StudentWorld::blockThenBonk(int x, int y, Actor* a1, bool bonk) {
 // // // // // // // // // // // // // // //
 //      PEACH/ACTOR IMPLEMENTATIONS
 // // // // // // // // // // // // // // //
+
+
+Peach* StudentWorld:: getPeach() const {return m_peach;}
 
 // Grant Peach invincibility for this number of ticks.
 void StudentWorld::grantInvincibility(int ticks) const{
@@ -209,7 +207,7 @@ bool StudentWorld::damageOverlappingActor(Actor* damager) const {
     
 }
 
-bool StudentWorld::damageOverlappingPeach(Actor* damager) {
+bool StudentWorld::damageOverlappingPeach(Actor* damager) const{
     // If a non-Peach actor overlaps Peach, damage Peach
     // and return true; otherwise, return false.
     if(overlapsPeach(damager))
@@ -222,12 +220,21 @@ void StudentWorld::setPeachHP(int hp) const{
     m_peach->setHP(hp);
 }
 
+void StudentWorld::bonkPeach(Actor*bonker) const{
+        m_peach->bonk(bonker);
+}
 
 // // // // // // // // // // // // // // //
 //      STANDARD IMPLEMENTATIONS
 // // // // // // // // // // // // // // //
 
+void StudentWorld::finishedLevel(bool done){
+    stage_complete = done;
+}
 
+void StudentWorld::wongame(bool done){
+    wonGame = done;
+}
 
 int StudentWorld::init()
 {
@@ -287,10 +294,10 @@ int StudentWorld::init()
                 case Level::empty:
                     break;
                 case Level::flag:
-                    m_flag = new Flag(this, x, y);
+                    m_flag = new EndLevel(this, x, y, IID_FLAG);
                     break;
                 case Level::mario:
-                    m_mario = new Flag(this, x, y);
+                    m_flag = new EndLevel(this, x, y, IID_MARIO);
                     marioisHere = true;
                     break;
             }
@@ -376,17 +383,14 @@ void StudentWorld::cleanUp()
 {
     for (auto a: actors)
             delete a;
-        actors.clear();
+    actors.clear();
 
     delete m_peach;
     m_peach = nullptr;
     
-if(levels!=2){
     delete m_flag;
     m_flag = nullptr;
-    }
-//    delete m_mario;
-    m_mario = nullptr;
+
 }
 
 StudentWorld::~StudentWorld(){

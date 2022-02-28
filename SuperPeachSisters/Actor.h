@@ -85,19 +85,11 @@ class Overlapable : public Actor {
 // // // // // // // // // // // // // // //
 
 
-class Flag: public Overlapable{
+class EndLevel: public Overlapable{
     public:
-    Flag(StudentWorld* world, int x_level, int y_level): Overlapable(world, IID_FLAG,  x_level, y_level, 1 , 0){};
+    EndLevel(StudentWorld* world, int x_level, int y_level, int imageID): Overlapable(world, imageID,  x_level, y_level, 1 , 0){};
     virtual void doSomething();
 };
-
-class Mario: public Overlapable{
-    public:
-    Mario(StudentWorld* world, int x_level, int y_level): Overlapable(world, IID_MARIO, x_level, y_level, 1 , 0){};
-    virtual void doSomething();
-};
-
-
 
 
 // // // // // // // // // // // // // // //

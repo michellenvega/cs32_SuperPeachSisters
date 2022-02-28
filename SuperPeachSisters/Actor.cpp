@@ -10,7 +10,7 @@
 // // // // // // // // // // // // // // //
 
 
- void Flag::doSomething(){  //   must check to see if it is alive, and if not, it must do nothing.
+ void EndLevel::doSomething(){  //   must check to see if it is alive, and if not, it must do nothing.
      if(!checkifAlive()) return;
      
      
@@ -23,20 +23,6 @@
          getWorld()->finishedLevel(true);
      }
  }
-
-void Mario::doSomething(){
-    if(!checkifAlive()) return;
-    
-    
-    if(getWorld()->overlapsPeach(this))    //  e Flag must see if it currently overlaps with Peach. If so:
-    {
-        getWorld()->increaseScore(1000);   //  It will increase the player’s score by 1000 points
-        
-        die();     //  It will immediately set its state to not-alive
-        
-        getWorld()->wongame(true);
-    }
-}
 
 // // // // // // // // // // // // // // //
 //    GOODIES AND BLOCK IMPLEMENTATIONS
@@ -830,7 +816,7 @@ void Peach::doSomething(){
                 initiatedJump = true;
                 if(p_jump) remaining_jump_distance = 12;
                 else remaining_jump_distance = 8;
-                getWorld()->startedGame = true;
+                getWorld()->startTheGame();
             getWorld()->playSound(SOUND_PLAYER_JUMP);
                 
             }
