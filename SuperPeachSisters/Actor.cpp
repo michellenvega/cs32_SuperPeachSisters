@@ -661,7 +661,7 @@ void Piranha::doSomething(){
         else
         setDirection(0);
     
-    getWorld()->addPiranhaFireball(getX()-8, getY(), getDirection()); //  Add a new Piranha Fireball, same x, y, direction
+  //  getWorld()->addPiranhaFireball(getX()-8, getY(), getDirection()); //  Add a new Piranha Fireball, same x, y, direction
     
     getWorld()->playSound(SOUND_PIRANHA_FIRE);  //  Play the sound SOUND_PIRANHA_FIRE
     
